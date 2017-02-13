@@ -7,11 +7,11 @@ require_once('api/persistence/factories/factParametre.class.php');
 require_once('api/persistence/objets/utils.php');
 
 $args = array(
-        'produit'=>FILTER_SANITIZE_NUMBER_INT,
-        'persId'=>FILTER_SANITIZE_NUMBER_INT,
-        'nom'=>FILTER_SANITIZE_STRING,
-        'prenom'=>FILTER_SANITIZE_STRING,
-        'email'=>FILTER_SANITIZE_EMAIL,
+    'produit'=>FILTER_SANITIZE_NUMBER_INT,
+    'persId'=>FILTER_SANITIZE_NUMBER_INT,
+    'nom'=>FILTER_SANITIZE_STRING,
+    'prenom'=>FILTER_SANITIZE_STRING,
+    'email'=>FILTER_SANITIZE_EMAIL,
 	'aEtude'=>FILTER_SANITIZE_STRING,
 	'promo'=>FILTER_SANITIZE_NUMBER_INT
 );
@@ -34,9 +34,13 @@ if(!is_object($p)){
    utils::display_error_page('Erreur Interne <br> veuillez Contacter la DSI', $lsComplement);
 }
 
+if(!$p->isOpen()) {
+    utils::display_error_page('Le produit que vous voulez est indisponible.');
+}
+
 //on instancie le client
 $paramRefSepar = factParametre::getParametreByCode("REF_SEPA");
-$refClient = implode($paramRefSepar->getValue(),array ( 'salt' => 'ENVA', 'persId' => $_POST['persId'] ));
+$refClient = implode($paramRefSepar->getValue(),array ( 'salt' => 'APRO', 'persId' => $_POST['persId'] )); // Dirty fix for ALFORPRO
 $c = factClient::getClientByReference($refClient);
 
 if (is_null($c)) {
@@ -50,7 +54,7 @@ if (is_null($c)) {
 }
 // On instancie la référence du paiement
 $random =  uniqid(date('Ymd'));
-$refPayement  = implode($paramRefSepar->getValue(),array ( 'refClient'=> $c->getIdentifiant(), 
+$refPayement  = implode($paramRefSepar->getValue(),array ( 'refClient'=> $c->getIdentifiant(),
                                                            'randomKey' => $random,
                                                            'produit' => $_POST['produit']//,
                                                            /*'A_Etude' =>  $_POST['aEtude'] */));
@@ -91,10 +95,10 @@ $msg = $paramSite->renderUrl() .
 // Si la clé est en ASCII, On la transforme en binaire
 $paramRivKey = factParametre::getParametreByCode("PBX_PRIV_KEY");
 $binKey = pack("H*", $paramRivKey->getValue());
-// On calcule lempreinte(à renseigner dans le paramètre PBX_HMAC)grâce à la fonction hash_hmac et 
+// On calcule lempreinte(à renseigner dans le paramètre PBX_HMAC)grâce à la fonction hash_hmac et
 // la clé binaire
 // On envoie via la variable PBX_HASH l'algorithme de hachage qui a été utilisé(SHA512 dans ce cas)
-// Pour afficher la liste des algorithmes disponibles sur votre environnement, décommentez la ligne 
+// Pour afficher la liste des algorithmes disponibles sur votre environnement, décommentez la ligne
 // suivante
 //print_r(hash_algos());
 $hmac = strtoupper(hash_hmac($paramHash->getValue(), $msg, $binKey));

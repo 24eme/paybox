@@ -16,7 +16,7 @@ class factClient extends factGeneric {
 			"c_pk" => "ciPk",
 			"c_nom" => "csNom",
 			"c_prenom" => "csPrenom",
-         "c_email" => "csEmail",
+			"c_email" => "csEmail",
 			"c_identifiant" => "csIdentifiant" );
 	/**
 	 * @var array
@@ -25,7 +25,7 @@ class factClient extends factGeneric {
 			"c_pk" => "int",
 			"c_nom" =>"string",
 			"c_prenom" => "string",
-         "c_email" => "string",
+			"c_email" => "string",
 			"c_identifiant" => "string");
 
 	/**

@@ -14,14 +14,16 @@ class factProduits  extends factGeneric {
 	protected static $caMap = array( 
 			"p_pk" => "ciPk",
 			"p_libelle" => "csLibelle",
-			"p_montant" => "ciMontant" );
+			"p_montant" => "ciMontant" ,
+			'p_open' => 'cbOpen');
 	/**
 	 * @var array
 	 */
 	protected static $caType = array(
 			"p_pk" => "int",
 			"p_libelle" => "string",
-			"p_montant" => "int" );
+			"p_montant" => "int",
+			"p_open" => "boolean");
 	/**
 	 * @var string
 	 */
@@ -56,7 +58,7 @@ class factProduits  extends factGeneric {
 		} elseif ($poProduit->_isUpdate ()) {
 			mysql::getmysql ()->updateData ( self::$csTable, self::$csPrimaryKey, $laData );
 		} else {
-			 throw new Exception ( 'Objet non Enregistrer : Pas un nouveau, pas une MAJ' );
+			 throw new Exception ( 'Objet non Enregistré : Pas un nouveau, pas une MAJ' );
 		}
 	}
 	/**

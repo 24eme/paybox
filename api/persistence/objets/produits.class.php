@@ -45,5 +45,8 @@ class produits extends objGeneric {
 			$this->__set ( "ciMontant", $pMont );
 			$this->_update ();
 		}
-	}	
+	}
+	public function isOpen() {
+	    return $this->__get( 'cbOpen' );
+	}
 }

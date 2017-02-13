@@ -2,6 +2,7 @@
 
 include 'define.php';
 include __DIR__.'/api/persistence/objets/utils.php';
+include __DIR__.'/api/persistence/factories/factProduits.class.php';
 
 $view = 'student';
 
@@ -18,6 +19,12 @@ $GET = filter_input_array(INPUT_GET, $args);
 
 if(!$GET['produit']){
     utils::display_error_page('Paramètre requis manquant.');
+}
+
+$produit = factProduits::getProduitByPk($GET['produit']);
+if(!is_object($produit) || !$produit->isOpen()) {
+    utils::display_error_page('Produit indisponible',
+                                'ID produit: '.$GET['produit']);
 }
 
 if(!$GET['etudiant']){
