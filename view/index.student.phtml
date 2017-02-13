@@ -12,27 +12,18 @@ body {
 </head>
 <body>
 
-<p><img src="view/img/banniere_Eve.png" width="500" height="89" alt="banner"/></p>
+<p><img src="view/img/alforprov5.png" width="500" height="89" alt="banner"/></p>
 <p>Merci de compléter les informations</p>
 
+<p>Vous n'avez rien à compléter</p>
 <form method="POST" action="/confirmation.php">
-	<p class="Paiement">Confirmez votre année d'études :</p>
-	<label for="A_Etude" class="Paiement">Année</label>
-	<select name="aEtude" id="A_Etude">
-		<option value="A1_promo_2021">A1 promo 2021</option>
-		<option value="A2_promo_2020">A2 promo 2020</option>
-		<option value="A3_promo_2019">A3 promo 2019</option>
-		<option value="A4_promo_2018">A4 promo 2018</option>
-		<option value="A5_promo_2017">A5 promo 2017</option>
-	</select>
 	<input name="produit" value="<?= $GET['produit']; ?>" type="hidden"/>
 	<input name="persId" value="<?= $GET['persId']; ?>" type="hidden"/>
 	<input name="nom" value="<?= $GET['nom']; ?>" type="hidden"/>
 	<input name="prenom" value="<?= $GET['prenom']; ?>" type="hidden"/>
 	<input name="email" value="<?= $GET['email']; ?>" type="hidden"/>
-
 <input value="Envoyer" type="submit"/>
 </form><br/>
-<p><img src="view/img/banniere_fin.png" width="500" height="92" alt="banner"/></p>
+<p><img src="view/img/formcoveto.jpg" width="500" height="92" alt="banner"/></p>
 </body>
 </html>
