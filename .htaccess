@@ -1,4 +1,4 @@
-<Files ~ "\.(ini|sql|old)$">
+<FilesMatch "\.(ini|sql|old)$">
   Order allow,deny
   Deny from all
-</Files>
+</FilesMatch>
