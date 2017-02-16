@@ -6,31 +6,42 @@ require_once('api/persistence/factories/factAchat.class.php');
 require_once('api/persistence/factories/factParametre.class.php');
 require_once('api/persistence/objets/utils.php');
 
+if (!session_start()) {
+	utils::display_error_page('La session n\'a pas démarré !');
+}
+
 $args = array(
-    'produit'=>FILTER_SANITIZE_NUMBER_INT,
-    'persId'=>FILTER_SANITIZE_NUMBER_INT,
     'nom'=>FILTER_SANITIZE_STRING,
     'prenom'=>FILTER_SANITIZE_STRING,
-    'email'=>FILTER_SANITIZE_EMAIL,
-	'aEtude'=>FILTER_SANITIZE_STRING,
-	'promo'=>FILTER_SANITIZE_NUMBER_INT
+	'email' => FILTER_SANITIZE_EMAIL
 );
 
 $_POST = filter_input_array(INPUT_POST, $args);
-if (!isset($_POST['produit'], /*$_POST['aEtude'],*/ $_POST['persId'], $_POST['nom'], $_POST['prenom'], $_POST['email'])) {
-   $lsComplement = 'Un parametre est manquant !!!'.PHP_EOL
-   		. 'Array dump: '.serialize($_POST).PHP_EOL;
-   utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
-}
-if (empty($_POST['produit']) || /*empty($_POST['aEtude']) ||*/ empty($_POST['persId'])|| empty($_POST['nom'])|| empty($_POST['prenom'])|| empty($_POST['email'])) {
-   $lsComplement = 'Un parametre est vide !!!'.PHP_EOL
-   		. 'Array dump: '.serialize($_POST).PHP_EOL;
-   utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
 
+$produit_id = (isset($_SESSION['produit'])) ? $_SESSION['produit'] : false;
+unset($_SESSION['produit']);
+
+if ($produit_id === false) {
+	$lsComplement = 'Mauvais id produit : ' . $produit_id;
+	utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
 }
-$p = factProduits::getProduitByPk($_POST['produit']);
+
+if (!isset($_POST['nom'], $_POST['prenom'], $_POST['email'])) {
+   $lsComplement = 'Un parametre est manquant !!!'.PHP_EOL
+	   . 'Array dump: ' . print_r($_POST, true) . PHP_EOL;
+   utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
+}
+
+if (empty($_POST['nom']) || empty($_POST['prenom']) || empty($_POST['email'])) {
+   $lsComplement = 'Un parametre est vide !!!'.PHP_EOL
+	   . 'Array dump: ' . print_r($_POST, true) . PHP_EOL;
+   utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
+}
+
+$p = factProduits::getProduitByPk($produit_id);
+
 if(!is_object($p)){
-   $lsComplement = ' "Produit inconnu" => Pk Produit = '.$_POST['produit'];
+	$lsComplement = 'Produit inconnu => Pk Produit = ' . $produit_id;
    utils::display_error_page('Erreur Interne <br> veuillez Contacter la DSI', $lsComplement);
 }
 
@@ -40,7 +51,7 @@ if(!$p->isOpen()) {
 
 //on instancie le client
 $paramRefSepar = factParametre::getParametreByCode("REF_SEPA");
-$refClient = implode($paramRefSepar->getValue(),array ( 'salt' => 'APRO', 'persId' => $_POST['persId'] )); // Dirty fix for ALFORPRO
+$refClient = implode($paramRefSepar->getValue(), array('ALFORPRO', md5($_POST['email']))); // Dirty fix for ALFORPRO
 $c = factClient::getClientByReference($refClient);
 
 if (is_null($c)) {
@@ -54,10 +65,9 @@ if (is_null($c)) {
 }
 // On instancie la référence du paiement
 $random =  uniqid(date('Ymd'));
-$refPayement  = implode($paramRefSepar->getValue(),array ( 'refClient'=> $c->getIdentifiant(),
-                                                           'randomKey' => $random,
-                                                           'produit' => $_POST['produit']//,
-                                                           /*'A_Etude' =>  $_POST['aEtude'] */));
+$refPayement = implode($paramRefSepar->getValue(), array($c->getIdentifiant(),
+	$random,
+	$produit_id));
 
 // On regarde si le paiement existe. On le crée s'il n'existe pas.
 $y = factPayement::getPayementByReference($refPayement);
@@ -72,7 +82,7 @@ if (is_null($y)) {
 $a = factAchat::getNewAchat();
 $a->setClientPk($c->getKey());
 $a->setPayementPk($y->getKey());
-$a->setProduitPk($_POST['produit']);
+$a->setProduitPk($produit_id);
 factAchat::writeAchat($a);
 
 /*

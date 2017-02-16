@@ -15,20 +15,25 @@ input {
     display: block;
     margin: 0 0 5px 0;
 }
+
+.container {
+    margin: auto;
+    max-width: 980px;
+}
 </style>
 </head>
 <body>
-<img src="view/img/banniere_Eve.png" width="500" height="89" alt="banner"/>
-<p>Merci de compléter les informations</p>
+<div class="container">
+    <img src="<?= VIEW . '/img/alforprov5.png' ?>" alt="banner"/>
+    <p>Merci de compléter les informations</p>
 
-<form method="POST" action="/confirmation.php">
-    <label for="nom">Nom : </label><input type="text" required id="nom" name="nom"/>
-    <label for="prenom">Prénom : </label><input type="text" required d="prenom" name="prenom"/>
-    <label for="email">Émail : </label><input type="email" required id="email" name="email"/>
-    <input type="hidden" name="persId" value="<?= uniqid();?>" />
-    <input type="hidden" name="produit" value="<?= $GET['produit']?>" />
-    <input value="Envoyer" type="submit"/>
-</form>
-<img src="view/img/banniere_fin.png" width="500" height="92" alt="banner"/>
+    <form method="POST" action="/confirmation.php">
+        <label for="nom">Nom : </label><input type="text" required id="nom" name="nom"/>
+        <label for="prenom">Prénom : </label><input type="text" required d="prenom" name="prenom"/>
+        <label for="email">Email : </label><input type="email" required id="email" name="email"/>
+        <input value="Envoyer" type="submit"/>
+    </form>
+    <img src="<?= VIEW . '/img/formcoveto.jpg' ?>" alt="banner"/>
+</div>
 </body>
 </html>
