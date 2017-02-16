@@ -15,7 +15,7 @@ class factProduits  extends factGeneric {
 			"p_pk" => "ciPk",
 			"p_libelle" => "csLibelle",
 			"p_montant" => "ciMontant" ,
-			'p_open' => 'cbOpen');
+		'p_open' => 'ciOpen');
 	/**
 	 * @var array
 	 */
@@ -23,7 +23,7 @@ class factProduits  extends factGeneric {
 			"p_pk" => "int",
 			"p_libelle" => "string",
 			"p_montant" => "int",
-			"p_open" => "boolean");
+		"p_open" => "int");
 	/**
 	 * @var string
 	 */
