@@ -1,3 +1,4 @@
 <Files ~ "\.(ini|sql|old)$">
-  Require all denied
+  Order allow,deny
+  Deny from all
 </Files>
