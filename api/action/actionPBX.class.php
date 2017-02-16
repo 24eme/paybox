@@ -19,6 +19,7 @@ class actionPBX {
 		$loParamEffectue = factParametre::getParametreByCode("PBX_EFFECTUE");
 		$loParamRefuse = factParametre::getParametreByCode("PBX_REFUSE");
 		$loParamAnnule = factParametre::getParametreByCode("PBX_ANNULE");
+	  $loParamUrlPaybox = factParametre::getParametreByCode("PBX_URL");
 		$lcSeparateur = ' ';
 		 
 		$lsCgiBin = '/usr/lib/cgi-bin/modulev2.cgi';
@@ -38,7 +39,8 @@ class actionPBX {
 			 . $loParamRepondreA->renderUrl($lcSeparateur)
 			 . $loParamRetour->renderUrl($lcSeparateur)
 			 . $loParamAnnule ->renderUrl($lcSeparateur)
-          . ' PBX_PAYBOX=https://tpeweb.paybox.com/cgi/MYchoix_pagepaiement.cgi';
+			. $loParamUrlPaybox->renderUrl($lcSeparateur);
+	  //. ' PBX_PAYBOX=https://tpeweb.paybox.com/cgi/MYchoix_pagepaiement.cgi';
 		
          return shell_exec($cmd);
 	}
