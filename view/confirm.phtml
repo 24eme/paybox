@@ -9,6 +9,23 @@
         font-size: 14px;
     }
 
+    .info, .warning {
+        border: 1px solid;
+        margin: 10px 0px;
+        padding: 0 10px;
+        background: no-repeat 10px center;
+    }
+
+    .info {
+        color: #00529B;
+        background-color: #BDE5F8;
+    }
+
+    .warning {
+        color: #9F6000;
+        background-color: #FEEFB3;
+    }
+
     form {
         display: block;
     }
@@ -33,20 +50,32 @@
     <p>Vous trouverez ci-dessous le recapitulatif de vos élément de facturation</p>
 
     <p>
-        Montant : <?= $p->getMontantEnEuro(); ?> Euro<br/>
+        Montant : <?= $p->getMontantEnEuro(); ?> Euro (€)<br/>
         Nom : <?= $c->getNom(); ?> <br/>
         Prénom : <?= $c->getPrenom(); ?> <br/>
         Email : <?= $c->getEmail(); ?> <br/>
         Produit : <?= $p->getlibelle(); ?>
     </p>
 
-    <p>Avant de lancer les opérations de payement, vérifier que les conditions de votre compte permettent sa réalisation
+    <div class="warning">
+        <h3>Attention | Warning</h3>
+        <p>Avant de lancer les opérations de payement, vérifier que les conditions de votre compte permettent sa
+            réalisation
         (plafond et/ou approvisionnement du compte).</p>
+    </div>
+
+    <div class="info">
+        <h3>Information | Notice</h3>
+        <p>Si vous avez opté pour le tarif résident/interne/PhD/étudiant, une pièce justificative vous sera demandée le
+            premier jour de la formation</p>
+        <p>A supporting document will be requested at the time of the training session in case of paiement of the fees
+            for resident/intern/PhD/student</p>
+    </div>
 
     <form method="POST" action="/action.php">
         <input name="refPayement" value="<?= $refPayement ?>" type="hidden"/>
         <input name="refClient" value="<?= $refClient ?>" type="hidden"/>
-        <input value="Envoyer" type="submit"/>
+        <input value="Confirmer" type="submit"/>
     </form>
     <img src="/view/img/formcoveto.jpg" alt="banner"/>
 </div>
