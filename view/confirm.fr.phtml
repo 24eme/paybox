@@ -30,11 +30,21 @@
             display: block;
         }
 
+        form label, input {
+            cursor: pointer;
+        }
         input {
             display: block;
             margin: 0 0 5px 0;
         }
 
+        p.control {
+            margin: 0 0 30px 0;
+        }
+
+        input[type='checkbox'] {
+            display: inline-block;
+        }
         .container {
             margin: auto;
             max-width: 980px;
@@ -50,27 +60,39 @@
     <p>Vous trouverez ci-dessous le recapitulatif de vos élément de facturation</p>
 
     <p>
-        Montant : <?= $p->getMontantEnEuro(); ?> Euro (€)<br/>
-        Nom : <?= $c->getNom(); ?> <br/>
-        Prénom : <?= $c->getPrenom(); ?> <br/>
-        Email : <?= $c->getEmail(); ?> <br/>
-        Produit : <?= $p->getlibelle(); ?>
+        <strong>Montant :</strong> <?= $p->getMontantEnEuro(); ?> Euro (€)<br/>
+        <strong>Nom :</strong> <?= $c->getNom(); ?> <br/>
+        <strong>Prénom :</strong> <?= $c->getPrenom(); ?> <br/>
+        <strong>Email :</strong> <?= $c->getEmail(); ?> <br/>
+        <strong>Produit :</strong> <?= $p->getlibelle(); ?>
     </p>
 
-    <div class="warning">
-        <h3>Attention</h3>
-        <p>Avant de lancer les opérations de payement, vérifier que les conditions de votre compte permettent sa
-            réalisation
-            (plafond et/ou approvisionnement du compte).</p>
-    </div>
-
-    <div class="info">
-        <h3>Information</h3>
-        <p>Si vous avez opté pour le tarif résident/interne/PhD/étudiant, une pièce justificative vous sera demandée le
-            premier jour de la formation</p>
-    </div>
-
     <form method="POST" action="/action.php">
+        <div class="warning">
+            <h3>Attention</h3>
+            <p>Avant de lancer les opérations de payement, vérifier que les conditions de votre compte permettent sa
+                réalisation
+                (plafond et/ou approvisionnement du compte).</p>
+        </div>
+        <p class="control">
+            <label>
+                <input type="checkbox" required>
+                J'ai vérifié que les conditions de mon compte permettent la réalisation du paiement.
+            </label>
+        </p>
+        <div class="info">
+            <h3>Information</h3>
+            <p>Si vous avez opté pour le tarif résident/interne/PhD/étudiant, une pièce justificative vous sera demandée
+                le
+                premier jour de la formation</p>
+        </div>
+        <p class="control">
+            <label>
+                <input type="checkbox" required>
+                Si je suis éligible à une réduction (en étant résident / interne / doctorant / étudiant), je présenterai
+                une pièce justificative le premier jour de la session.
+            </label>
+        </p>
         <input name="refPayement" value="<?= $refPayement ?>" type="hidden"/>
         <input name="refClient" value="<?= $refClient ?>" type="hidden"/>
         <input value="Confirmer" type="submit"/>

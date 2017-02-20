@@ -30,11 +30,21 @@
         display: block;
     }
 
+    form label, input {
+        cursor: pointer;
+    }
     input {
         display: block;
         margin: 0 0 5px 0;
     }
 
+    p.control {
+        margin: 0 0 30px 0;
+    }
+
+    input[type='checkbox'] {
+        display: inline-block;
+    }
     .container {
         margin: auto;
         max-width: 980px;
@@ -47,33 +57,42 @@
         <img src="/view/img/alforprov5.png" alt="banner"/>
     </h1>
     <h2> *** Please confirm the following information before payment *** </h2>
-    <p>Vous trouverez ci-dessous le recapitulatif de vos élément de facturation</p>
 
     <p>
-        Fee: <?= $p->getMontantEnEuro(); ?> Euro (€)<br/>
-        Last name: <?= $c->getNom(); ?> <br/>
-        First name: <?= $c->getPrenom(); ?> <br/>
-        E-mail address: <?= $c->getEmail(); ?> <br/>
-        Training session: <?= $p->getlibelle(); ?>
+        <strong>Fee:</strong> <?= $p->getMontantEnEuro(); ?> Euro (€)<br/>
+        <strong>Last name:</strong> <?= $c->getNom(); ?> <br/>
+        <strong>First name:</strong> <?= $c->getPrenom(); ?> <br/>
+        <strong>E-mail address:</strong> <?= $c->getEmail(); ?> <br/>
+        <strong>Training session:</strong> <?= $p->getlibelle(); ?>
     </p>
 
-    <div class="warning">
-        <h3>Warning</h3>
-        <p>Avant de lancer les opérations de payement, vérifier que les conditions de votre compte permettent sa
-            réalisation
-        (plafond et/ou approvisionnement du compte).</p>
-    </div>
-
-    <div class="info">
-        <h3>Notice</h3>
-        <p>A supporting document will be requested at the time of the training session in case of paiement of the fees
-            for resident/intern/PhD/student</p>
-    </div>
-
     <form method="POST" action="/action.php">
+        <div class="warning">
+            <h3>Warning</h3>
+            <p>Before paying the fees, check the practicability of the (international) payment.</p>
+        </div>
+        <p class="control">
+            <label>
+                <input type="checkbox" required>
+                I checked the practicability of the (international) payment before paying the fees
+            </label>
+        </p>
+        <div class="info">
+            <h3>Notice</h3>
+            <p>A supporting document will be requested at the time of the training session in case of paiement of the
+                fees
+                for resident/intern/PhD/student</p>
+        </div>
+        <p class="control">
+            <label>
+                <input type="checkbox" required>
+                If I am eligible for a reduced fees (as a resident/intern/PhD/student), I will present a supporting
+                document the first day of the Summer Class
+            </label>
+        </p>
         <input name="refPayement" value="<?= $refPayement ?>" type="hidden"/>
         <input name="refClient" value="<?= $refClient ?>" type="hidden"/>
-        <input value="Confirmer" type="submit"/>
+        <input value="Next" type="submit"/>
     </form>
     <img src="/view/img/formcoveto.jpg" alt="banner"/>
 </div>
