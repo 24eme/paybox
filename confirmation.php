@@ -13,13 +13,20 @@ if (!session_start()) {
 $args = array(
     'nom'=>FILTER_SANITIZE_STRING,
     'prenom'=>FILTER_SANITIZE_STRING,
-	'email' => FILTER_SANITIZE_EMAIL
+	'email' => FILTER_SANITIZE_EMAIL,
+	'lang' => FILTER_SANITIZE_STRING
 );
 
 $_POST = filter_input_array(INPUT_POST, $args);
 
 $produit_id = (isset($_SESSION['produit'])) ? $_SESSION['produit'] : false;
 unset($_SESSION['produit']);
+
+$lang = $_POST['lang'] === null ? 'fr' : $_POST['lang'];
+
+if (!in_array($lang, ['fr', 'en'])) {
+	utils::display_error_page('Erreur Interne <br> veuillez Contacter la DSI', 'Unsupported language: ' . $lang);
+}
 
 if ($produit_id === false) {
 	$lsComplement = 'Mauvais id produit : ' . $produit_id;
@@ -117,4 +124,4 @@ $hmac = strtoupper(hash_hmac($paramHash->getValue(), $msg, $binKey));
 // ATTENTION : l'ordre des champs est extrêmement important, il doit
 // correspondre exactement à l'ordre des champs dans la chaîne hachée
 */
-include VIEW.'/confirm.phtml';
+include VIEW . '/confirm.' . $lang . '.phtml';

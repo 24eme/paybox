@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Confirmation</title>
+<style type="text/css">
+    body {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        font-size: 14px;
+    }
+
+    .info, .warning {
+        border: 1px solid;
+        margin: 10px 0px;
+        padding: 0 10px;
+        background: no-repeat 10px center;
+    }
+
+    .info {
+        color: #00529B;
+        background-color: #BDE5F8;
+    }
+
+    .warning {
+        color: #9F6000;
+        background-color: #FEEFB3;
+    }
+
+    form {
+        display: block;
+    }
+
+    input {
+        display: block;
+        margin: 0 0 5px 0;
+    }
+
+    .container {
+        margin: auto;
+        max-width: 980px;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>
+        <img src="/view/img/alforprov5.png" alt="banner"/>
+    </h1>
+    <h2> *** Please confirm the following information before payment *** </h2>
+    <p>Vous trouverez ci-dessous le recapitulatif de vos élément de facturation</p>
+
+    <p>
+        Fee: <?= $p->getMontantEnEuro(); ?> Euro (€)<br/>
+        Last name: <?= $c->getNom(); ?> <br/>
+        First name: <?= $c->getPrenom(); ?> <br/>
+        E-mail address: <?= $c->getEmail(); ?> <br/>
+        Training session: <?= $p->getlibelle(); ?>
+    </p>
+
+    <div class="warning">
+        <h3>Warning</h3>
+        <p>Avant de lancer les opérations de payement, vérifier que les conditions de votre compte permettent sa
+            réalisation
+        (plafond et/ou approvisionnement du compte).</p>
+    </div>
+
+    <div class="info">
+        <h3>Notice</h3>
+        <p>A supporting document will be requested at the time of the training session in case of paiement of the fees
+            for resident/intern/PhD/student</p>
+    </div>
+
+    <form method="POST" action="/action.php">
+        <input name="refPayement" value="<?= $refPayement ?>" type="hidden"/>
+        <input name="refClient" value="<?= $refClient ?>" type="hidden"/>
+        <input value="Confirmer" type="submit"/>
+    </form>
+    <img src="/view/img/formcoveto.jpg" alt="banner"/>
+</div>
+</body>
+</html>

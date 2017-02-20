@@ -28,4 +28,4 @@ if(!is_object($produit) || !$produit->isOpen()) {
 
 $_SESSION['produit'] = $produit->getKey();
 
-include VIEW . '/index.external.phtml';
+include VIEW . '/index.phtml';

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Complément de données</title>
+<style type="text/css">
+body {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 14px;
+}
+form {
+    display: block;
+}
+input {
+    display: block;
+    margin: 0 0 20px 0;
+}
+
+input[type='radio'] {
+    display: inline-block;
+}
+.container {
+    margin: auto;
+    max-width: 980px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <img src="/view/img/alforprov5.png" alt="banner"/>
+    <p>Merci de compléter les informations</p>
+    <p>Please fill in the following information</p>
+
+    <form method="POST" action="/confirmation.php">
+        <label for="nom">Nom : | Last name:</label><input type="text" required id="nom" name="nom"/>
+        <label for="prenom">Prénom : | First name:</label><input type="text" required id="prenom" name="prenom"/>
+        <label for="email">Email : | E-Mail address:</label><input type="email" required id="email" name="email"/>
+        <label>
+            <input type="radio" name="lang" value="fr" checked aria-checked="true" required aria-required="true">
+            Français
+        </label>
+        <label>
+            <input type="radio" name="lang" value="en">
+            English
+        </label>
+        <input value="Envoyer | Next" type="submit"/>
+    </form>
+    <img src="/view/img/formcoveto.jpg" alt="banner"/>
+</div>
+</body>
+</html>
