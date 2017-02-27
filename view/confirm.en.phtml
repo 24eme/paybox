@@ -69,30 +69,29 @@
     <form method="POST" action="/action.php">
         <div class="warning">
             <h3>Warning</h3>
-            <p>Before paying the fees, check the practicability of the (international) payment.</p>
+            <p>Before paying the fees, please check the practicability of the (international) payment.</p>
         </div>
         <p class="control">
             <label>
                 <input type="checkbox" required>
-                I checked the practicability of the (international) payment before paying the fees
+                I checked the practicability of the (international) payment before paying the fees.
             </label>
         </p>
         <div class="info">
             <h3>Notice</h3>
-            <p>A supporting document will be requested at the time of the training session in case of paiement of the
-                fees
-                for resident/intern/PhD/student</p>
+            <p>A supporting document will be requested at the time of the training session in case of payement of the
+                fees for resident/intern/PhD/student.</p>
         </div>
         <p class="control">
             <label>
                 <input type="checkbox" required>
                 If I am eligible for a reduced fees (as a resident/intern/PhD/student), I will present a supporting
-                document the first day of the Summer Class
+                document the first day of the Summer Class.
             </label>
         </p>
         <input name="refPayement" value="<?= $refPayement ?>" type="hidden"/>
         <input name="refClient" value="<?= $refClient ?>" type="hidden"/>
-        <input value="Next" type="submit"/>
+        <input value="Confirm" type="submit"/>
     </form>
     <img src="/view/img/formcoveto.jpg" alt="banner"/>
 </div>
