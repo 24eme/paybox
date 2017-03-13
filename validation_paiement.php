@@ -90,6 +90,7 @@ switch ($GET['Reponse']) {
 
 try{
 	$refPaiement->setPStatus($status);
+	$refPaiement->setMontant($data['montant']);
 	factPayement::writePayement($refPaiement);
 	utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' ' . $message_retour);
 

@@ -15,7 +15,8 @@ class factPayement  extends factGeneric {
 			"y_pk" => "ciPk",
 			"y_reference" => "csReference",
 			"y_status" => "csStatus",
-			"y_date" => "cdDate");
+		"y_date" => "cdDate",
+		"y_montant" => "ciMontant");
 	
 	/**
 	 * @var array
@@ -24,7 +25,8 @@ class factPayement  extends factGeneric {
 			"y_pk" => "int",
 			"y_reference" =>"string",
 			"y_status" => "string",
-			"y_date" => "date");
+		"y_date" => "date",
+		"y_montant" => "int");
 	
 	/**
 	 *

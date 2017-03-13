@@ -83,6 +83,7 @@ if (is_null($y)) {
 	$y->setDate();
 	$y->setPStatus(0);
 	$y->setReference($refPayement);
+	$y->setMontant(0);
 	factPayement::writePayement($y);
 }
 

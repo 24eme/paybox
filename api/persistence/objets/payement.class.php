@@ -19,6 +19,7 @@ class payement extends objGeneric
 	protected $csReference;
 	protected $csStatus;
 	protected $cdDate;
+	protected $ciMontant;
 
 	public function __construct()
 	{
@@ -55,6 +56,11 @@ class payement extends objGeneric
 		return $this->__get("cdDate");
 	}
 
+	public function getMontant()
+	{
+		return $this->__get("ciMontant");
+	}
+
 	public function setReference($psRef)
 	{
 		if ($psRef != $this->csReference) {
@@ -77,5 +83,10 @@ class payement extends objGeneric
 	public function setDate()
 	{
 		$this->__set("cdDate", time());
+	}
+
+	public function setMontant($piMontant)
+	{
+		$this->__set('ciMontant', $piMontant);
 	}
 }
