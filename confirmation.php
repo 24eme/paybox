@@ -58,7 +58,7 @@ if(!$p->isOpen()) {
 
 //on instancie le client
 $paramRefSepar = factParametre::getParametreByCode("REF_SEPA");
-$refClient = implode($paramRefSepar->getValue(), array('ALFORPRO', md5($_POST['email']))); // Dirty fix for ALFORPRO
+$refClient = implode($paramRefSepar->getValue(), array($p->getSalt(), md5($_POST['email']))); // Dirty fix for ALFORPRO
 $c = factClient::getClientByReference($refClient);
 
 if (is_null($c)) {

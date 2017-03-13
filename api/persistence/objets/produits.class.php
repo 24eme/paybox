@@ -11,6 +11,7 @@ class produits extends objGeneric {
 	protected $csLibelle;
 	protected $ciMontant;
 	protected $ciOpen;
+	protected $csSalt;
 	public function __construct() {
 		$liNbArg = func_num_args ();
 		$laArgs = func_get_args ();
@@ -49,5 +50,10 @@ class produits extends objGeneric {
 	}
 	public function isOpen() {
 		return $this->__get('ciOpen');
+	}
+
+	public function getSalt()
+	{
+		return $this->__get('csSalt');
 	}
 }
