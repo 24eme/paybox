@@ -14,15 +14,15 @@ $args = array(
     'nom'=>FILTER_SANITIZE_STRING,
     'prenom'=>FILTER_SANITIZE_STRING,
 	'email' => FILTER_SANITIZE_EMAIL,
-	'lang' => FILTER_SANITIZE_STRING
+	'persId' => FILTER_SANITIZE_STRING
 );
 
-$_POST = filter_input_array(INPUT_POST, $args);
+$POST = filter_input_array(INPUT_POST, $args);
 
 $produit_id = (isset($_SESSION['produit'])) ? $_SESSION['produit'] : false;
 unset($_SESSION['produit']);
 
-$lang = $_POST['lang'] === null ? 'fr' : $_POST['lang'];
+$lang = 'fr';
 
 if (!in_array($lang, ['fr', 'en'])) {
 	utils::display_error_page('Erreur Interne <br> veuillez Contacter la DSI', 'Unsupported language: ' . $lang);
@@ -33,15 +33,15 @@ if ($produit_id === false) {
 	utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
 }
 
-if (!isset($_POST['nom'], $_POST['prenom'], $_POST['email'])) {
+if (!isset($POST['nom'], $POST['prenom'], $POST['email'], $POST['persId'])) {
    $lsComplement = 'Un parametre est manquant !!!'.PHP_EOL
-	   . 'Array dump: ' . print_r($_POST, true) . PHP_EOL;
+	   . 'Array dump: ' . print_r($POST, true) . PHP_EOL;
    utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
 }
 
-if (empty($_POST['nom']) || empty($_POST['prenom']) || empty($_POST['email'])) {
+if (empty($POST['nom']) || empty($POST['prenom']) || empty($POST['email']) || empty($POST['persId'])) {
    $lsComplement = 'Un parametre est vide !!!'.PHP_EOL
-	   . 'Array dump: ' . print_r($_POST, true) . PHP_EOL;
+	   . 'Array dump: ' . print_r($POST, true) . PHP_EOL;
    utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
 }
 
@@ -49,7 +49,7 @@ $p = factProduits::getProduitByPk($produit_id);
 
 if(!is_object($p)){
 	$lsComplement = 'Produit inconnu => Pk Produit = ' . $produit_id;
-   utils::display_error_page('Erreur Interne <br> veuillez Contacter la DSI', $lsComplement);
+	utils::display_error_page('Erreur Interne <br> veuillez Contacter la DSI', $lsComplement);
 }
 
 if(!$p->isOpen()) {
@@ -58,15 +58,15 @@ if(!$p->isOpen()) {
 
 //on instancie le client
 $paramRefSepar = factParametre::getParametreByCode("REF_SEPA");
-$refClient = implode($paramRefSepar->getValue(), array($p->getSalt(), md5($_POST['email']))); // Dirty fix for ALFORPRO
+$refClient = implode($paramRefSepar->getValue(), array($p->getSalt(), $POST['persId'])); // Dirty fix for ALFORPRO
 $c = factClient::getClientByReference($refClient);
 
 if (is_null($c)) {
 	$c = factClient::getNewClient();
-	$c->setNom($_POST['nom']);
-	$c->setPrenom($_POST['prenom']);
+	$c->setNom($POST['nom']);
+	$c->setPrenom($POST['prenom']);
 	$c->setIdentifiant($refClient);
-	$c->setEmail($_POST['email']);
+	$c->setEmail($POST['email']);
 	factClient::writeClient($c);
 	$c = factClient::getClientByReference($refClient);
 }

@@ -4,26 +4,39 @@
 <meta charset="UTF-8">
 <title>Complement de données</title>
 <style type="text/css">
-body {
-	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-	font-size: 12px;
-}
+    body {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        font-size: 14px;
+    }
+
+    form {
+        display: block;
+    }
+
+    input {
+        display: block;
+        margin: 0 0 20px 0;
+    }
+
+    .container {
+        margin: auto;
+        max-width: 980px;
+    }
 </style>
 </head>
 <body>
+<div class="container">
+    <p>Merci de compléter les informations</p>
 
-<p><img src="/view/img/alforprov5.png" width="500" height="89" alt="banner"/></p>
-<p>Merci de compléter les informations</p>
-
-<p>Vous n'avez rien à compléter</p>
-<form method="POST" action="/confirmation.php">
-	<input name="produit" value="<?= $GET['produit']; ?>" type="hidden"/>
-	<input name="persId" value="<?= $GET['persId']; ?>" type="hidden"/>
-	<input name="nom" value="<?= $GET['nom']; ?>" type="hidden"/>
-	<input name="prenom" value="<?= $GET['prenom']; ?>" type="hidden"/>
-	<input name="email" value="<?= $GET['email']; ?>" type="hidden"/>
-<input value="Envoyer" type="submit"/>
-</form><br/>
-<p><img src="/view/img/formcoveto.jpg" width="500" height="92" alt="banner"/></p>
+    <form method="POST" action="/confirmation.php">
+        <input name="persId" value="<?= $GET['persId']; ?>" type="hidden"/>
+        <label for="nom">Nom :</label><input required id="nom" name="nom" value="<?= $GET['nom']; ?>" type="text"/>
+        <label for="prenom">Prénom :</label><input required id="prenom" name="prenom" value="<?= $GET['prenom']; ?>"
+                                                   type="text"/>
+        <label for="email">Email :</label><input required id="email" name="email" value="<?= $GET['email']; ?>"
+                                                 type="text"/>
+        <input value="Envoyer" type="submit"/>
+    </form>
+</div>
 </body>
 </html>
