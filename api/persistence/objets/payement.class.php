@@ -8,18 +8,19 @@ require_once 'objGeneric.class.php';
  */
 class payement extends objGeneric
 {
-   public static $STATUS = array(0 => 'A_CONFIRMER', // En attente du paiement PBX
-                                      1 => 'EFFECTUE', // Paiement effectué et confirmé
-                                      2 => 'EN_ATTTENTE', // Paiement en attente de validation
-                                      3 => 'ERREUR_BANQUE', // Erreur de la banque client
-                                      4 => 'ERREUR', // Erreur Paybox
-                                      5 => 'INCONNU', // Code retour inconnu
-                                      6 => 'ANNULER' ); // Paiement annulé par le client
+	public static $STATUS = array(0 => 'A_CONFIRMER', // En attente du paiement PBX
+		1 => 'EFFECTUE', // Paiement effectué et confirmé
+		2 => 'EN_ATTTENTE', // Paiement en attente de validation
+		3 => 'ERREUR_BANQUE', // Erreur de la banque client
+		4 => 'ERREUR', // Erreur Paybox
+		5 => 'INCONNU', // Code retour inconnu
+		6 => 'ANNULER'); // Paiement annulé par le client
 	protected $ciPk;
 	protected $csReference;
 	protected $csStatus;
 	protected $cdDate;
 	protected $ciMontant;
+	protected $ciTypePaiement;
 
 	public function __construct()
 	{
@@ -71,8 +72,11 @@ class payement extends objGeneric
 
 	public function setPStatus($pStat)
 	{
-      if (is_numeric($pStat) &&  array_key_exists($pStat, payement::$STATUS) ) { $lsCode= payement::$STATUS[$pStat]; }
-      else { $lsCode=$pStat; }
+		if (is_numeric($pStat) && array_key_exists($pStat, payement::$STATUS)) {
+			$lsCode = payement::$STATUS[$pStat];
+		} else {
+			$lsCode = $pStat;
+		}
 
 		if ($lsCode != $this->csStatus) {
 			$this->__set("csStatus", $lsCode);
@@ -88,5 +92,15 @@ class payement extends objGeneric
 	public function setMontant($piMontant)
 	{
 		$this->__set('ciMontant', $piMontant);
+	}
+
+	public function getTypePaiement()
+	{
+		return $this->__get('ciTypePaiement');
+	}
+
+	public function setTypePaiement($pTypePaiement)
+	{
+		$this->__set('ciTypePaiement', $pTypePaiement);
 	}
 }

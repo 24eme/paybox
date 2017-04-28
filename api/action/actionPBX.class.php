@@ -1,12 +1,14 @@
 <?php
 
 require_once('api/persistence/factories/factParametre.class.php');
+
 /**
  *
  * @author david.richard
  *
  */
-class actionPBX {
+class actionPBX
+{
 
 	public static function send($poClient, $poPayement, $poAchat)
 	{

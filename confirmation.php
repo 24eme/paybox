@@ -11,8 +11,8 @@ if (!session_start()) {
 }
 
 $args = array(
-    'nom'=>FILTER_SANITIZE_STRING,
-    'prenom'=>FILTER_SANITIZE_STRING,
+	'nom' => FILTER_SANITIZE_STRING,
+	'prenom' => FILTER_SANITIZE_STRING,
 	'email' => FILTER_SANITIZE_EMAIL,
 	'persId' => FILTER_SANITIZE_STRING,
 	'paiement' => FILTER_VALIDATE_INT
@@ -40,26 +40,26 @@ if ($POST['paiement'] === false || $POST['paiement'] < 1 || $POST['paiement'] > 
 }
 
 if (!isset($POST['nom'], $POST['prenom'], $POST['email'], $POST['persId'], $POST['paiement'])) {
-   $lsComplement = 'Un parametre est manquant !!!'.PHP_EOL
-	   . 'Array dump: ' . print_r($POST, true) . PHP_EOL;
-   utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
+	$lsComplement = 'Un parametre est manquant !!!' . PHP_EOL
+		. 'Array dump: ' . print_r($POST, true) . PHP_EOL;
+	utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
 }
 
 if (empty($POST['nom']) || empty($POST['prenom']) || empty($POST['email']) || empty($POST['persId']) || empty($POST['paiement'])) {
-   $lsComplement = 'Un parametre est vide !!!'.PHP_EOL
-	   . 'Array dump: ' . print_r($POST, true) . PHP_EOL;
-   utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
+	$lsComplement = 'Un parametre est vide !!!' . PHP_EOL
+		. 'Array dump: ' . print_r($POST, true) . PHP_EOL;
+	utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
 }
 
 $p = factProduits::getProduitByPk($produit_id);
 
-if(!is_object($p)){
+if (!is_object($p)) {
 	$lsComplement = 'Produit inconnu => Pk Produit = ' . $produit_id;
 	utils::display_error_page('Erreur Interne <br> veuillez Contacter la DSI', $lsComplement);
 }
 
-if(!$p->isOpen()) {
-    utils::display_error_page('Le produit que vous voulez est indisponible.');
+if (!$p->isOpen()) {
+	utils::display_error_page('Le produit que vous voulez est indisponible.');
 }
 
 //on instancie le client
@@ -81,7 +81,7 @@ if (is_null($c)) {
 }
 
 // On instancie la référence du paiement
-$random =  uniqid(date('Ymd'));
+$random = uniqid(date('Ymd'));
 $refPayement = implode($paramRefSepar->getValue(), [
 	$c->getIdentifiant(),
 	$random,
@@ -97,7 +97,7 @@ if (is_null($y)) {
 	$y->setReference($refPayement);
 	$y->setMontant(0);
 	// Paiement en 1x ou 3x
-	// $y->setTypePaiement($POST['paiement']);
+	$y->setTypePaiement($POST['paiement']);
 	factPayement::writePayement($y);
 }
 
