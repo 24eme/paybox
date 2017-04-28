@@ -9,4 +9,4 @@ $y = factPayement::getPayementByReference($_POST["refPayement"]);
 $c = factClient::getClientByReference($_POST["refClient"]);
 $a = factAchat::getAchatByPayement($y->getKey());
 
-echo actionPBX::send($c, $y,$a);
+echo actionPBX::send($c, $y, $a);

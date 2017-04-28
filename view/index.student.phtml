@@ -36,7 +36,15 @@
                                                    type="text"/>
         <label for="email">Email :</label><input required id="email" name="email" value="<?= $GET['email']; ?>"
                                                  type="text"/>
-        <input value="Envoyer" type="submit"/>
+        <label>
+            <input type="radio" name="paiement" id="paiement-1x" value="1" checked>
+            Paiement en une fois
+        </label>
+        <label>
+            <input type="radio" name="paiement" id="paiement-3x" value="2">
+            Paiement en 3 fois
+        </label>
+        <input value="Confirmer" type="submit"/>
     </form>
     <img src="/view/img/footer.jpg" alt="footer">
 </div>
