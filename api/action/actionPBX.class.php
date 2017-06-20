@@ -34,7 +34,7 @@ class actionPBX
 		$lsCgiBin = '/usr/lib/cgi-bin/modulev2.cgi';
 
 		// Si paiement en 1x
-		if ($poPayement->getTypePaiement() === 1) {
+		if ($poPayement->getTypePaiement() == 1) {
 			$cmd = $lsCgiBin
 				. $loParamMode->renderUrl($lcSeparateur)
 				. $loParamSite->renderUrl($lcSeparateur)
@@ -54,7 +54,7 @@ class actionPBX
 
 			return shell_exec($cmd);
 		} // Si paiement en 3x
-		elseif ($poPayement->getTypePaiement() === 2) {
+		elseif ($poPayement->getTypePaiement() == 2) {
 			$today = new DateTime();
 
 			$unMois = clone $today;
