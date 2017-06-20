@@ -97,7 +97,7 @@ if (is_null($y)) {
 	$y->setReference($refPayement);
 	$y->setMontant(0);
 	// Paiement en 1x ou 3x
-	$y->setTypePaiement($POST['paiement']);
+	$y->setTypePaiement((int)$POST['paiement']);
 	factPayement::writePayement($y);
 }
 
