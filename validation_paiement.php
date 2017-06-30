@@ -20,7 +20,7 @@ $args = array(
 $GET = filter_input_array(INPUT_GET, $args);
 
 if ($GET['Auto'] === NULL) {
-	utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' | N° Autorisation nl. Paiement refuse.');
+	utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' | N° Autorisation nul. Paiement refuse.');
 	$valeurs = "Mt=" . $GET['Mt'] . "&Ref=" . $GET['Ref'] . "&Reponse=" . $GET['Reponse'];
 } else {
 	$valeurs = "Mt=" . $GET['Mt'] . "&Ref=" . $GET['Ref'] . "&Auto=" . $GET['Auto'] . "&Reponse=" . $GET['Reponse'];
@@ -92,7 +92,7 @@ switch ($GET['Reponse']) {
 
 try {
 	$refPaiement->setPStatus($status);
-	$refPaiement->setMontant($data['montant']);
+	$refPaiement->setMontant($refPaiement->getMontant() + $data['montant']);
 	factPayement::writePayement($refPaiement);
 	utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' ' . $message_retour);
 
