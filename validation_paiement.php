@@ -9,24 +9,21 @@ require_once __DIR__ . '/api/persistence/factories/factProduits.class.php';
 require_once __DIR__ . '/api/persistence/factories/factAchat.class.php';
 require_once __DIR__ . '/api/persistence/factories/factClient.class.php';
 
-$args = array(
-	'Mt' => FILTER_DEFAULT,
-	'Ref' => FILTER_DEFAULT,
-	'Auto' => FILTER_DEFAULT,
-	'Reponse' => FILTER_DEFAULT,
-	'Sign' => FILTER_DEFAULT
-);
-
-$GET = filter_input_array(INPUT_GET, $args);
+$GET = filter_input_array(INPUT_GET, FILTER_DEFAULT);
 
 if ($GET['Auto'] === NULL) {
 	utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' | N° Autorisation nul. Paiement refuse.');
-	$valeurs = "Mt=" . $GET['Mt'] . "&Ref=" . $GET['Ref'] . "&Reponse=" . $GET['Reponse'];
-} else {
-	$valeurs = "Mt=" . $GET['Mt'] . "&Ref=" . $GET['Ref'] . "&Auto=" . $GET['Auto'] . "&Reponse=" . $GET['Reponse'];
-}
+} 
 
-if ($GET['Sign'] === NULL || !utils::verify_sign($valeurs, base64_decode($GET['Sign']))) {
+/** 
+* On extrait la signature de la requete
+*/
+$query = http_build_query($GET);
+
+$query = preg_replace('/(.*)(?|&)' . 'Sign' . '=[^&]+?(&)(.*)/i', '$1$2$4', $query . '&');
+$query = substr($query, 0, -1);
+
+if ($GET['Sign'] === NULL || !utils::verify_sign($query, base64_decode($GET['Sign']))) {
 	utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' | Signature non valide : ' . $GET['Sign']);
 	exit;
 }
