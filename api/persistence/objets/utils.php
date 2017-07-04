@@ -94,6 +94,13 @@ class utils
 		fclose($h);
 	}
 
+	public static function debug($var)
+	{
+		utils::log(LOG_FILE, '--------DEBUG--------');
+		utils::log(LOG_FILE, print_r($var, 1));
+		utils::log(LOG_FILE, '---------------------');
+	}
+
 	public static function mail($to, $template, $data)
 	{
 		$subject = "Notification de paiement";

@@ -11,6 +11,10 @@ require_once __DIR__ . '/api/persistence/factories/factClient.class.php';
 
 $GET = filter_input_array(INPUT_GET, FILTER_DEFAULT);
 
+if (DEBUG) {
+	utils::debug($GET);
+}
+
 if ($GET['Auto'] === NULL) {
 	utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' | N° Autorisation nul. Paiement refuse.');
 } 
@@ -23,6 +27,14 @@ $query = http_build_query($GET);
 $query = preg_replace('/(.*)(?|&)' . 'Sign' . '=[^&]+?(&)(.*)/i', '$1$2$4', $query . '&');
 $query = substr($query, 0, -1);
 
+if (DEBUG) {
+	utils::debug($query);
+}
+//--------------
+
+/**
+* On vérifie la signature
+*/
 if ($GET['Sign'] === NULL || !utils::verify_sign($query, base64_decode($GET['Sign']))) {
 	utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' | Signature non valide : ' . $GET['Sign']);
 	exit;
@@ -40,7 +52,7 @@ $achat = factAchat::getAchatByPayement($refPaiement->getKey());
 $client = $achat->getClient();
 $produit = $achat->getProduit();
 
-/*
+/**
  * Désactivation en attendant de savoir si l'IPN est appelée plusieurs fois ou non
  *
 if ($produit->getMontantEnCentime() != $GET['Mt']) {
