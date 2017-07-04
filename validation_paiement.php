@@ -112,5 +112,5 @@ try {
 		$data
 	);
 } catch (Exception $e) {
-	utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' REPONSE: ' . $GET['Reponse'] . ' ' . $message_retour . '|' . $e->getMessage());
+	utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' REPONSE: ' . $GET['Reponse'] . ' ' . $message_retour . ' | ' . $e->getMessage());
 }

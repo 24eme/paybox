@@ -74,7 +74,7 @@ class factPayement extends factGeneric
 		} elseif ($poPayement->_isUpdate()) {
 			mysql::getmysql()->updateData(self::$csTable, self::$csPrimaryKey, $laData);
 		} else {
-			throw new Exception ('Objet non Enregistrer : Pas un nouveau, pas une MAJ');
+			throw new Exception ('Objet non Enregistré : Pas un nouveau, pas une MAJ');
 		}
 	}
 
