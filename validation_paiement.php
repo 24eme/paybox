@@ -17,10 +17,11 @@ if (DEBUG) {
 
 if ($GET['Auto'] === NULL) {
 	utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' | N° Autorisation nul. Paiement refuse.');
-} 
+}
 
-/** 
+/**
 * On extrait la signature de la requete
+* https://davidwalsh.name/php-remove-variable
 */
 $query = http_build_query($GET);
 
@@ -40,6 +41,7 @@ if ($GET['Sign'] === NULL || !utils::verify_sign($query, base64_decode($GET['Sig
 	exit;
 }
 
+// On récupère les informations du paiement engagé
 $refPaiement = factPayement::getPayementByReference($GET['Ref']);
 if (!is_object($refPaiement)) {
 	utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' n\'est pas une référence valide');
@@ -48,6 +50,7 @@ if (!is_object($refPaiement)) {
 
 $message_retour = utils::code_retour($GET['Reponse']);
 
+// On récupère les informations liés au paiement engagé
 $achat = factAchat::getAchatByPayement($refPaiement->getKey());
 $client = $achat->getClient();
 $produit = $achat->getProduit();
@@ -59,7 +62,7 @@ if ($produit->getMontantEnCentime() != $GET['Mt']) {
 	utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' | Le montant n\'est pas bon');
 	exit;
 }
-*/
+ */
 
 $data = array(
 	'user' => $client->getPrenom() . ' ' . $client->getNom(),
@@ -100,9 +103,22 @@ switch ($GET['Reponse']) {
 }
 
 try {
-	$refPaiement->setPStatus($status);
-	$refPaiement->setMontant($refPaiement->getMontant() + $data['montant']);
-	factPayement::writePayement($refPaiement);
+    // Nouveau paiement
+	$y = factPayement::getNewPayement();
+	$y->setDate();
+	$y->setPStatus($status);
+	$y->setReference($GET['Ref']);
+	$y->setMontant($data['montant']);
+	$y->setTypePaiement($refPaiement->getTypePaiement());
+	factPayement::writePayement($y);
+
+	// Nouvel achat lié au nouveau paiement
+	$a = factAchat::getNewAchat();
+	$a->setClientPk($client->getKey());
+	$a->setPayementPk($y->getKey());
+	$a->setProduitPk($produit->getKey());
+	factAchat::writeAchat($a);
+
 	utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' ' . $message_retour);
 
 

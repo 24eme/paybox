@@ -8,9 +8,9 @@ require_once ('api/persistence/factories/factGeneric.class.php');
  *
  */
 class factClient extends factGeneric {
-	
+
 	/**
-	 * @var array Tableau de mappage entre champs en base et propriété de l'objet 
+	 * @var array Tableau de mappage entre champs en base et propriété de l'objet
 	 */
 	protected static $caMap = array(
 			"c_pk" => "ciPk",
@@ -37,7 +37,7 @@ class factClient extends factGeneric {
 	 */
 	protected static $csTable = 'client';
 	/**
-	 * @var string clé primaire de la table 
+	 * @var string clé primaire de la table
 	 */
 	protected static $csPrimaryKey = 'c_pk';
 	/**
@@ -47,7 +47,7 @@ class factClient extends factGeneric {
 	public static function getClientByPk($pPk) {
 		return self::_getBy ( self::$csClass, self::$caMap, self::$caType,  self::$csTable, self::$csPrimaryKey, $pPk );
 	}
-	
+
 	/**
 	 * @param client $poClient Objet client a ajouter dans la base.
 	 */
@@ -62,10 +62,10 @@ class factClient extends factGeneric {
 		} elseif ($poClient->_isUpdate ()) {
 			mysql::getmysql ()->updateData ( self::$csTable, self::$csPrimaryKey, $laData );
 		} else {
-			 throw new Exception ( 'Objet non Enregistrer : Pas un nouveau, pas une MAJ' );
+			 throw new Exception ( 'Objet non Enregistré : Pas un nouveau, pas une MAJ' );
 		}
-		
-		
+
+
 	}
 	/**
 	 * @return client
