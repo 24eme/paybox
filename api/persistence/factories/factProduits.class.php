@@ -16,7 +16,8 @@ class factProduits  extends factGeneric {
 			"p_libelle" => "csLibelle",
 			"p_montant" => "ciMontant" ,
 		'p_open' => 'ciOpen',
-		'p_salt' => 'csSalt');
+		'p_salt' => 'csSalt',
+		'p_type_paiement' => 'ciTypePaiement');
 	/**
 	 * @var array
 	 */
@@ -25,7 +26,8 @@ class factProduits  extends factGeneric {
 			"p_libelle" => "string",
 			"p_montant" => "int",
 		"p_open" => "int",
-		"p_salt" => "string");
+		"p_salt" => "string"
+		"p_type_paiement" => "int");
 	/**
 	 * @var string
 	 */

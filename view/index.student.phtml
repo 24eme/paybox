@@ -44,10 +44,12 @@
             <input type="radio" name="paiement" id="paiement-1x" value="1" checked>
             Paiement en une fois
         </label>
+        <?php if($produit->getTypePaiement() > 1): ?>
         <label>
             <input type="radio" name="paiement" id="paiement-3x" value="2">
             Paiement en 3 fois
         </label>
+        <?php endif; ?>
         <input value="Confirmer" type="submit"/>
     </form>
     <img src="/view/img/footer.jpg" alt="footer">

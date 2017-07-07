@@ -12,6 +12,7 @@ class produits extends objGeneric {
 	protected $ciMontant;
 	protected $ciOpen;
 	protected $csSalt;
+	protected $ciTypePaiement;
 	public function __construct() {
 		$liNbArg = func_num_args ();
 		$laArgs = func_get_args ();
@@ -35,6 +36,9 @@ class produits extends objGeneric {
 	}
 	public function getKey() {
 		return $this->__get ( "ciPk" );
+	}
+	public function getTypePaiement() {
+		return $this->__get( "ciTypePaiement" );
 	}
 	public function setLibelle($psLib) {
 		if ($psLib != $this->csLibelle) {
