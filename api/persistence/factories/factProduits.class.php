@@ -26,7 +26,7 @@ class factProduits  extends factGeneric {
 			"p_libelle" => "string",
 			"p_montant" => "int",
 		"p_open" => "int",
-		"p_salt" => "string"
+		"p_salt" => "string",
 		"p_type_paiement" => "int");
 	/**
 	 * @var string
