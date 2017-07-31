@@ -11,6 +11,8 @@ require_once __DIR__ . '/api/persistence/factories/factClient.class.php';
 
 $GET = filter_input_array(INPUT_GET, FILTER_DEFAULT);
 
+utils::log(LOG_FILE, '--------Nouveau entrée--------');
+
 if (DEBUG) {
 	utils::debug($GET);
 }
