@@ -7,15 +7,15 @@ require_once('api/persistence/factories/factParametre.class.php');
 require_once('api/persistence/objets/utils.php');
 
 if (!session_start()) {
-	utils::display_error_page('La session n\'a pas démarré !');
+    utils::display_error_page('La session n\'a pas démarré !');
 }
 
 $args = array(
-	'nom' => FILTER_SANITIZE_STRING,
-	'prenom' => FILTER_SANITIZE_STRING,
-	'email' => FILTER_SANITIZE_EMAIL,
-	'persId' => FILTER_SANITIZE_STRING,
-	'paiement' => FILTER_VALIDATE_INT
+    'nom' => FILTER_SANITIZE_STRING,
+    'prenom' => FILTER_SANITIZE_STRING,
+    'email' => FILTER_SANITIZE_EMAIL,
+    'persId' => FILTER_SANITIZE_STRING,
+    'paiement' => FILTER_VALIDATE_INT
 );
 
 $POST = filter_input_array(INPUT_POST, $args);
@@ -26,66 +26,66 @@ unset($_SESSION['produit']);
 $lang = 'fr';
 
 if (!in_array($lang, ['fr', 'en'])) {
-	utils::display_error_page('Erreur Interne <br> veuillez Contacter la DSI', 'Langue non supportée : ' . $lang);
+    utils::display_error_page('Erreur Interne <br> veuillez Contacter la DSI', 'Langue non supportée : ' . $lang);
 }
 
 if ($produit_id === false) {
-	$lsComplement = 'Mauvais id produit : ' . $produit_id;
-	utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
+    $lsComplement = 'Mauvais id produit : ' . $produit_id;
+    utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
 }
 
 // Si la variable paiement incorrecte -> paiement en 1x par défaut
 if ($POST['paiement'] === false || $POST['paiement'] < 1 || $POST['paiement'] > 2) {
-	$POST['paiement'] = 1;
+    $POST['paiement'] = 1;
 }
 
 if (!isset($POST['nom'], $POST['prenom'], $POST['email'], $POST['persId'], $POST['paiement'])) {
-	$lsComplement = 'Un parametre est manquant !!!' . PHP_EOL
-		. 'Array dump: ' . print_r($POST, true) . PHP_EOL;
-	utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
+    $lsComplement = 'Un parametre est manquant !!!' . PHP_EOL
+        . 'Array dump: ' . print_r($POST, true) . PHP_EOL;
+    utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
 }
 
 if (empty($POST['nom']) || empty($POST['prenom']) || empty($POST['email']) || empty($POST['persId']) || empty($POST['paiement'])) {
-	$lsComplement = 'Un parametre est vide !!!' . PHP_EOL
-		. 'Array dump: ' . print_r($POST, true) . PHP_EOL;
-	utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
+    $lsComplement = 'Un parametre est vide !!!' . PHP_EOL
+        . 'Array dump: ' . print_r($POST, true) . PHP_EOL;
+    utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
 }
 
 $p = factProduits::getProduitByPk($produit_id);
 
 if (!is_object($p)) {
-	$lsComplement = 'Produit inconnu => Pk Produit = ' . $produit_id;
-	utils::display_error_page('Erreur Interne <br> veuillez Contacter la DSI', $lsComplement);
+    $lsComplement = 'Produit inconnu => Pk Produit = ' . $produit_id;
+    utils::display_error_page('Erreur Interne <br> veuillez Contacter la DSI', $lsComplement);
 }
 
 if (!$p->isOpen()) {
-	utils::display_error_page('Le produit que vous voulez est indisponible.');
+    utils::display_error_page('Le produit que vous voulez est indisponible.');
 }
 
 //on instancie le client
 $paramRefSepar = factParametre::getParametreByCode("REF_SEPA");
 $refClient = implode($paramRefSepar->getValue(), [
-	$p->getSalt(),
-	$POST['persId']
+    $p->getSalt(),
+    $POST['persId']
 ]);
 $c = factClient::getClientByReference($refClient);
 
 if (is_null($c)) {
-	$c = factClient::getNewClient();
-	$c->setNom($POST['nom']);
-	$c->setPrenom($POST['prenom']);
-	$c->setIdentifiant($refClient);
-	$c->setEmail($POST['email']);
-	factClient::writeClient($c);
-	$c = factClient::getClientByReference($refClient);
+    $c = factClient::getNewClient();
+    $c->setNom($POST['nom']);
+    $c->setPrenom($POST['prenom']);
+    $c->setIdentifiant($refClient);
+    $c->setEmail($POST['email']);
+    factClient::writeClient($c);
+    $c = factClient::getClientByReference($refClient);
 }
 
 // On instancie la référence du paiement
 $random = uniqid(date('Ymd'));
 $refPayement = implode($paramRefSepar->getValue(), [
-	$c->getIdentifiant(),
-	$random,
-	$produit_id
+    $c->getIdentifiant(),
+    $random,
+    $produit_id
 ]);
 
 // A chaque nouvelle commande, on instancie un nouveau paiement
@@ -113,16 +113,16 @@ $dateTime = date('c');
 
 // On crée la chaîne à hacher sans URLencodage
 $msg = $paramSite->renderUrl() .
-	$paramRang->renderUrl('&') .
-	$paramIdentifiant->renderUrl('&') .
-	"&PBX_TOTAL=" . $_POST['Montant'] .
-	$paramDevise->renderUrl("&") .
-	"&PBX_CMD=" . $refPayement .
-	"&PBX_PORTEUR=" . $_POST['email'] .
-	$paramRepondreA->renderUrl('&') .
-	"&PBX_RETOUR=Mt:M;Ref:R;Auto:A;Erreur:E" .
-	$paramHash->renderUrl('&') .
-	"&PBX_TIME=" . $dateTime;
+    $paramRang->renderUrl('&') .
+    $paramIdentifiant->renderUrl('&') .
+    "&PBX_TOTAL=" . $_POST['Montant'] .
+    $paramDevise->renderUrl("&") .
+    "&PBX_CMD=" . $refPayement .
+    "&PBX_PORTEUR=" . $_POST['email'] .
+    $paramRepondreA->renderUrl('&') .
+    "&PBX_RETOUR=Mt:M;Ref:R;Auto:A;Erreur:E" .
+    $paramHash->renderUrl('&') .
+    "&PBX_TIME=" . $dateTime;
 // On récupère la clé secrète HMAC (stockée dans une base de données par exemple)et que lon renseigne dans la variable $keyTest;
 // Si la clé est en ASCII, On la transforme en binaire
 $paramRivKey = factParametre::getParametreByCode("PBX_PRIV_KEY");
