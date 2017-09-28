@@ -26,14 +26,12 @@ if ($GET['Auto'] === null) {
 * https://davidwalsh.name/php-remove-variable
 */
 $query = http_build_query($GET);
-
 $query = preg_replace('/(.*)(?|&)' . 'Sign' . '=[^&]+?(&)(.*)/i', '$1$2$4', $query . '&');
 $query = substr($query, 0, -1);
 
 if (DEBUG) {
     utils::debug($query);
 }
-//--------------
 
 /**
 * On vérifie la signature
@@ -112,12 +110,12 @@ try {
     $y->setReference($GET['Ref']);
     $y->setMontant($data['montant']);
     $y->setTypePaiement($refPaiement->getTypePaiement());
-    factPayement::writePayement($y);
+    $idNewPayement = factPayement::writePayement($y);
 
     // Nouvel achat lié au nouveau paiement
     $a = factAchat::getNewAchat();
     $a->setClientPk($client->getKey());
-    $a->setPayementPk($y->getKey());
+    $a->setPayementPk($idNewPayement);
     $a->setProduitPk($produit->getKey());
     factAchat::writeAchat($a);
 

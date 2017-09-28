@@ -29,6 +29,10 @@ class mysql /*extends connexion */
      */
     private $coPdo;
 
+    private function __contruct()
+    {
+    }
+
     /**
      * @return mysql
      */
@@ -196,7 +200,11 @@ class mysql /*extends connexion */
         }
     }
 
-    private function __contruct()
+    /**
+     * @return string
+     */
+    public function getLastInsertId()
     {
+        return $this->coPdo->lastInsertId();
     }
 }

@@ -24,18 +24,7 @@ class payement extends objGeneric
 
     public function __construct()
     {
-        $liNbArg = func_num_args();
-        $laArgs = func_get_args();
-        switch ($liNbArg) {
-            case 2:
-                $this->_nouveau();
-                // no break
-            case 1:
-                $this->__set("ciPk", $laArgs [0]);
-                break;
-            default:
-                die('Utilise la factory !!');
-        }
+        $this->_nouveau();
     }
 
     public function getReference()

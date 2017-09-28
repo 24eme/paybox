@@ -70,7 +70,9 @@ class factPayement extends factGeneric
             $laData [$lsKey] = array('type' => self::$caType[$lsKey], 'data' => $poPayement->__get($lsValue));
         }
         if ($poPayement->_isNew()) {
+            unset($laData['y_pk']); // obligatoire car la colonne est en auto_increment
             mysql::getmysql()->insertData(self::$csTable, $laData);
+            return mysql::getmysql()->getLastInsertId();
         } elseif ($poPayement->_isUpdate()) {
             mysql::getmysql()->updateData(self::$csTable, self::$csPrimaryKey, $laData);
         } else {
@@ -84,7 +86,7 @@ class factPayement extends factGeneric
      */
     public static function getNewPayement()
     {
-        return new self::$csClass(mysql::getmysql()->getNextId(self::$csPrimaryKey, self::$csTable), null);
+        return new self::$csClass();
     }
 
     /**

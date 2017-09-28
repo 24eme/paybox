@@ -89,8 +89,6 @@ $refPayement = implode($paramRefSepar->getValue(), [
 ]);
 
 // A chaque nouvelle commande, on instancie un nouveau paiement
-//$y = factPayement::getPayementByReference($refPayement);
-//if (is_null($y)) {
 $y = factPayement::getNewPayement();
 $y->setDate();
 $y->setPStatus(0);
@@ -98,12 +96,11 @@ $y->setReference($refPayement);
 $y->setMontant(0);
 // Paiement en 1x ou 3x
 $y->setTypePaiement((int)$POST['paiement']);
-factPayement::writePayement($y);
-//}
+$idNewPayement = factPayement::writePayement($y);
 
 $a = factAchat::getNewAchat();
 $a->setClientPk($c->getKey());
-$a->setPayementPk($y->getKey());
+$a->setPayementPk($idNewPayement);
 $a->setProduitPk($produit_id);
 factAchat::writeAchat($a);
 
