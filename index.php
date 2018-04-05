@@ -2,30 +2,40 @@
 
 include 'define.php';
 include __DIR__.'/api/persistence/objets/utils.php';
+include __DIR__.'/api/persistence/factories/factProduits.class.php';
 
-$view = 'student';
+if (!session_start()) {
+    utils::display_error_page('La session n\'a pas démarré !');
+}
+
 
 $args = array(
     'produit' => FILTER_VALIDATE_INT,
-    'etudiant' => FILTER_VALIDATE_BOOLEAN,
+    'persId' => FILTER_SANITIZE_NUMBER_INT,
     'nom' => FILTER_SANITIZE_STRING,
     'prenom' => FILTER_SANITIZE_STRING,
-    'email' => FILTER_VALIDATE_EMAIL,
-    'persId' => FILTER_VALIDATE_INT
+    'email' => FILTER_SANITIZE_EMAIL
 );
 
-$GET = filter_input_array(INPUT_GET, $args);
+$GET = filter_input_array(INPUT_GET, $args, true);
 
-if(!$GET['produit']){
+if ($GET['persId'] === null) {
+    $GET['persId'] = uniqid();
+}
+
+if (!$GET['produit']) {
     utils::display_error_page('Paramètre requis manquant.');
 }
 
-if(!$GET['etudiant']){
-    $view = 'external';
-} else {
-    if(!$GET['persId'] || !$GET['nom'] || !$GET['prenom'] || !$GET['email']) {
-        utils::display_error_page('Paramètre requis manquant.');
-    }
+$produit = factProduits::getProduitByPk($GET['produit']);
+
+if (!is_object($produit) || !$produit->isOpen()) {
+    utils::display_error_page(
+        'Produit indisponible',
+                                'ID produit: '.$GET['produit']
+    );
 }
 
-include VIEW.'/index.'.$view.'.phtml';
+$_SESSION['produit'] = $produit->getKey();
+
+include VIEW . '/index.student.phtml';

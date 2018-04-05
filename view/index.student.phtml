@@ -4,35 +4,55 @@
 <meta charset="UTF-8">
 <title>Complement de données</title>
 <style type="text/css">
-body {
-	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-	font-size: 12px;
-}
+    body {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        font-size: 14px;
+    }
+
+    form {
+        display: block;
+    }
+
+    input {
+        display: block;
+        margin: 0 0 20px 0;
+    }
+
+    input[type=radio] {
+        display: inline-block;
+    }
+
+    .container {
+        margin: auto;
+        max-width: 980px;
+    }
 </style>
 </head>
 <body>
+<div class="container">
+    <img src="/view/img/banniere.jpg" alt="banniere">
+    <p>Merci de compléter les informations</p>
 
-<p><img src="view/img/banniere_Eve.png" width="500" height="89" alt="banner"/></p>
-<p>Merci de compléter les informations</p>
-
-<form method="POST" action="/confirmation.php">
-	<p class="Paiement">Confirmez votre année d'études :</p>
-	<label for="A_Etude" class="Paiement">Année</label>
-	<select name="aEtude" id="A_Etude">
-		<option value="A1_promo_2021">A1 promo 2021</option>
-		<option value="A2_promo_2020">A2 promo 2020</option>
-		<option value="A3_promo_2019">A3 promo 2019</option>
-		<option value="A4_promo_2018">A4 promo 2018</option>
-		<option value="A5_promo_2017">A5 promo 2017</option>
-	</select>
-	<input name="produit" value="<?= $GET['produit']; ?>" type="hidden"/>
-	<input name="persId" value="<?= $GET['persId']; ?>" type="hidden"/>
-	<input name="nom" value="<?= $GET['nom']; ?>" type="hidden"/>
-	<input name="prenom" value="<?= $GET['prenom']; ?>" type="hidden"/>
-	<input name="email" value="<?= $GET['email']; ?>" type="hidden"/>
-
-<input value="Envoyer" type="submit"/>
-</form><br/>
-<p><img src="view/img/banniere_fin.png" width="500" height="92" alt="banner"/></p>
+    <form method="POST" action="/confirmation.php">
+        <input name="persId" value="<?= $GET['persId']; ?>" type="hidden"/>
+        <label for="nom">Nom :</label><input required id="nom" name="nom" value="<?= $GET['nom']; ?>" type="text"/>
+        <label for="prenom">Prénom :</label><input required id="prenom" name="prenom" value="<?= $GET['prenom']; ?>"
+                                                   type="text"/>
+        <label for="email">Email :</label><input required id="email" name="email" value="<?= $GET['email']; ?>"
+                                                 type="text"/>
+        <label>
+            <input type="radio" name="paiement" id="paiement-1x" value="1" checked>
+            Paiement en une fois
+        </label>
+        <?php if($produit->getTypePaiement() > 1): ?>
+        <label>
+            <input type="radio" name="paiement" id="paiement-3x" value="2">
+            Paiement en 3 fois
+        </label>
+        <?php endif; ?>
+        <input value="Confirmer" type="submit"/>
+    </form>
+    <img src="/view/img/footer.jpg" alt="footer">
+</div>
 </body>
 </html>

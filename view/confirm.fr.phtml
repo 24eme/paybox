@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmation</title>
+    <style type="text/css">
+        body {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            font-size: 14px;
+        }
+
+        .warning {
+            border: 1px solid;
+            margin: 10px 0px;
+            padding: 0 10px;
+            background: no-repeat 10px center;
+        }
+
+        .warning {
+            color: #9F6000;
+            background-color: #FEEFB3;
+        }
+
+        form {
+            display: block;
+        }
+
+        form label, input {
+            cursor: pointer;
+        }
+        input {
+            display: block;
+            margin: 0 0 5px 0;
+        }
+
+        p.control {
+            margin: 0 0 30px 0;
+        }
+
+        input[type='checkbox'] {
+            display: inline-block;
+        }
+        .container {
+            margin: auto;
+            max-width: 980px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <img src="/view/img/banniere.jpg" alt="banniere">
+    <h2> *** Confirmation de vos informations *** </h2>
+    <p>Vous trouverez ci-dessous le recapitulatif de vos élément de facturation</p>
+
+    <p>
+        <strong>Montant :</strong> <?= $p->getMontantEnEuro(); ?> Euro (€)<br/>
+        <strong>Nom :</strong> <?= $c->getNom(); ?> <br/>
+        <strong>Prénom :</strong> <?= $c->getPrenom(); ?> <br/>
+        <strong>Email :</strong> <?= $c->getEmail(); ?> <br/>
+        <strong>Produit :</strong> <?= $p->getlibelle(); ?>
+    </p>
+
+    <form method="POST" action="/action.php">
+        <div class="warning">
+            <h3>Attention</h3>
+            <p>Avant de lancer les opérations de paiement, vérifiez que les conditions de votre compte permettent sa
+                réalisation
+                (plafond et/ou approvisionnement du compte).</p>
+        </div>
+        <p class="control">
+            <label>
+                <input type="checkbox" required>
+                J'ai vérifié que les conditions de mon compte permettent la réalisation du paiement.
+            </label>
+        </p>
+        <input name="refPayement" value="<?= $refPayement ?>" type="hidden"/>
+        <input name="refClient" value="<?= $refClient ?>" type="hidden"/>
+        <p>En cliquant sur « Confirmer », vous allez être redirigé vers le site de PayBox.</p>
+        <input value="Confirmer" type="submit"/>
+    </form>
+    <img src="/view/img/footer.jpg" alt="footer">
+</div>
+</body>
+</html>

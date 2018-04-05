@@ -1,0 +1,4 @@
+<FilesMatch "\.(ini|sql|old)$">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
