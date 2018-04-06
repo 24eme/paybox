@@ -6,6 +6,8 @@ require_once('api/persistence/factories/factAchat.class.php');
 require_once('api/persistence/factories/factParametre.class.php');
 require_once('api/persistence/objets/utils.php');
 
+require_once('api/action/actionPBX.class.php');
+
 if (!session_start()) {
     utils::display_error_page('La session n\'a pas démarré !');
 }
@@ -104,9 +106,30 @@ $a->setPayementPk($idNewPayement);
 $a->setProduitPk($produit_id);
 factAchat::writeAchat($a);
 
-// On récupère la date au format ISO-8601
-$dateTime = date('c');
+$paybox = new actionPBX($c, $y, $a);
 
+// On crée la chaîne à hacher sans URLencodage
+$msg = $paybox->generate();
+
+// On récupère la clé secrète HMAC (stockée dans une base de données par exemple) et que l'on renseigne dans la variable $keyTest;
+// Si la clé est en ASCII, On la transforme en binaire
+$paramPrivKey = factParametre::getParametreByCode("PBX_PRIV_KEY");
+$binKey = pack("H*", $paramPrivKey->getValue());
+
+// On calcule l'empreinte (à renseigner dans le paramètre PBX_HMAC) grâce à la fonction hash_hmac et
+// la clé binaire
+// On envoie via la variable PBX_HASH l'algorithme de hachage qui a été utilisé (SHA512 dans ce cas)
+$paramHash = factParametre::getParametreByCode("PBX_HASH");
+$hmac = strtoupper(hash_hmac($paramHash->getValue(), $msg, $binKey));
+// La chaîne sera envoyée en majuscules, d'où l'utilisation de strtoupper()
+// On crée le formulaire à envoyer à PayboxSystem
+// ATTENTION : l'ordre des champs est extrêmement important, il doit
+// correspondre exactement à l'ordre des champs dans la chaîne hachée
+$form = $paybox->form($hmac);
+
+// On récupère la date au format ISO-8601
+//$dateTime = date('c');
+/*
 // On crée la chaîne à hacher sans URLencodage
 $msg = $paramSite->renderUrl() .
     $paramRang->renderUrl('&') .
@@ -134,5 +157,5 @@ $hmac = strtoupper(hash_hmac($paramHash->getValue(), $msg, $binKey));
 // On crée le formulaire à envoyer à PayboxSystem
 // ATTENTION : l'ordre des champs est extrêmement important, il doit
 // correspondre exactement à l'ordre des champs dans la chaîne hachée
-
+ */
 include VIEW . '/confirm.' . $lang . '.phtml';

@@ -73,8 +73,7 @@
                 J'ai vérifié que les conditions de mon compte permettent la réalisation du paiement.
             </label>
         </p>
-        <input name="refPayement" value="<?= $refPayement ?>" type="hidden"/>
-        <input name="refClient" value="<?= $refClient ?>" type="hidden"/>
+        <?= $form ?>
         <p>En cliquant sur « Confirmer », vous allez être redirigé vers le site de PayBox.</p>
         <input value="Confirmer" type="submit"/>
     </form>

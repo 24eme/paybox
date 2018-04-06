@@ -10,94 +10,137 @@ require_once('api/persistence/factories/factParametre.class.php');
 class actionPBX
 {
 
+    private $client,
+            $paiement,
+            $achat,
+            $site,
+            $rang,
+            $identifiant,
+            $devise,
+            $repondreA,
+            $mode,
+            $retour,
+            $effectue,
+            $refuse,
+            $annule,
+            $urlPaybox,
+            $separateur,
+            $hash,
+            $time;
+
+    /*
+     * @param $client client
+     * @param $paiement paiement
+     * @param $achat achat
+     */
+    public function __construct($client, $paiement, $achat)
+    {
+        $this->site = factParametre::getParametreByCode("PBX_SITE");
+        $this->rang = factParametre::getParametreByCode("PBX_RANG");
+        $this->identifiant = factParametre::getParametreByCode("PBX_IDENTIFIANT");
+        $this->devise = factParametre::getParametreByCode("PBX_DEVISE");
+        $this->repondreA = factParametre::getParametreByCode("PBX_REPONDRE_A");
+        $this->mode = factParametre::getParametreByCode("PBX_MODE");
+        $this->retour = factParametre::getParametreByCode("PBX_RETOUR");
+        $this->effectue = factParametre::getParametreByCode("PBX_EFFECTUE");
+        $this->refuse = factParametre::getParametreByCode("PBX_REFUSE");
+        $this->annule = factParametre::getParametreByCode("PBX_ANNULE");
+        $this->hash = factParametre::getParametreByCode("PBX_HASH");
+        $this->separateur = '&';
+        $this->time = date('c');
+
+        $this->client = $client;
+        $this->paiement = $paiement;
+        $this->achat = $achat;
+    }
+
     /**
-     * @param $poClient client
-     * @param $poPayement payement
-     * @param $poAchat achat
      * @return string
      */
-    public static function send($poClient, $poPayement, $poAchat)
+    public function generate()
     {
-        $loParamSite = factParametre::getParametreByCode("PBX_SITE");
-        $loParamRang = factParametre::getParametreByCode("PBX_RANG");
-        $loParamIdentifiant = factParametre::getParametreByCode("PBX_IDENTIFIANT");
-        $loParamDevise = factParametre::getParametreByCode("PBX_DEVISE");
-        $loParamRepondreA = factParametre::getParametreByCode("PBX_REPONDRE_A");
-        $loParamMode = factParametre::getParametreByCode("PBX_MODE");
-        $loParamRetour = factParametre::getParametreByCode("PBX_RETOUR");
-        $loParamEffectue = factParametre::getParametreByCode("PBX_EFFECTUE");
-        $loParamRefuse = factParametre::getParametreByCode("PBX_REFUSE");
-        $loParamAnnule = factParametre::getParametreByCode("PBX_ANNULE");
-        $loParamUrlPaybox = factParametre::getParametreByCode("PBX_PAYBOX");
-        $lcSeparateur = ' ';
+        $total = '';
 
-        $lsCgiBin = '/usr/lib/cgi-bin/modulev2.cgi';
+        switch($this->paiement->getTypePaiement()) {
+            case 2: // paiement en 3x
+                $today = new DateTime();
 
-        // Si paiement en 1x
-        if ($poPayement->getTypePaiement() == 1) {
-            $cmd = $lsCgiBin
-                . $loParamMode->renderUrl($lcSeparateur)
-                . $loParamSite->renderUrl($lcSeparateur)
-                . $loParamRang->renderUrl($lcSeparateur)
-                . $loParamIdentifiant->renderUrl($lcSeparateur)
-                . ' PBX_TOTAL=' . $poAchat->getProduit()->getMontantEnCentime()
-                . $loParamDevise->renderUrl($lcSeparateur)
-                . ' PBX_CMD=' . $poPayement->getReference()
-                . ' PBX_PORTEUR="' . $poClient->getEmail() . '"'
-                . $loParamRetour->renderUrl($lcSeparateur)
-                . $loParamEffectue->renderUrl($lcSeparateur)
-                . $loParamRefuse->renderUrl($lcSeparateur)
-                . $loParamRepondreA->renderUrl($lcSeparateur)
-                . $loParamRetour->renderUrl($lcSeparateur)
-                . $loParamAnnule->renderUrl($lcSeparateur)
-                . $loParamUrlPaybox->renderUrl($lcSeparateur);
+                $unMois = clone $today;
+                $unMois->add(new DateInterval('P1M')); // +1 mois
 
-            return shell_exec($cmd);
-        } // Si paiement en 3x
-        elseif ($poPayement->getTypePaiement() == 2) {
-            $today = new DateTime();
+                $deuxMois = clone $today;
+                $deuxMois->add(new DateInterval('P2M')); // +2 mois
 
-            $unMois = clone $today;
-            $unMois->add(new DateInterval('P1M')); // +1 mois
+                // Retourne la valeur entière de la division
+                $tier = (int)($this->achat->getProduit()->getMontantEnCentime() / 3);
+                $modulo = $this->achat->getProduit()->getMontantEnCentime() % 3;
 
-            $deuxMois = clone $today;
-            $deuxMois->add(new DateInterval('P2M')); // +2 mois
-
-            // Retourne la valeur entière de la division
-            $tier = (int)($poAchat->getProduit()->getMontantEnCentime() / 3);
-            $modulo = $poAchat->getProduit()->getMontantEnCentime() % 3;
-
-            $cmd = $lsCgiBin
-                . $loParamMode->renderUrl($lcSeparateur)
-                . $loParamSite->renderUrl($lcSeparateur)
-                . $loParamRang->renderUrl($lcSeparateur)
-                . $loParamIdentifiant->renderUrl($lcSeparateur)
-
+                $total =
                 // Montant initial
-                . ' PBX_TOTAL=' . $tier
+                  '&PBX_TOTAL=' . $tier
 
                 // 1er prélèvement
-                . ' PBX_DATE1=' . $unMois->format('d/m/Y')
-                . ' PBX_2MONT1=' . $tier
+                . '&PBX_DATE1=' . $unMois->format('d/m/Y')
+                . '&PBX_2MONT1=' . $tier
 
                 // 2eme prélèvement
-                . ' PBX_DATE2=' . $deuxMois->format('d/m/Y')
-                . ' PBX_2MONT2=' . ($tier + $modulo)
+                . '&PBX_DATE2=' . $deuxMois->format('d/m/Y')
+                . '&PBX_2MONT2=' . ($tier + $modulo)
+                ;
 
-                . $loParamDevise->renderUrl($lcSeparateur)
-                . ' PBX_CMD=' . $poPayement->getReference()
-                . ' PBX_PORTEUR="' . $poClient->getEmail() . '"'
-                . $loParamRetour->renderUrl($lcSeparateur)
-                . $loParamEffectue->renderUrl($lcSeparateur)
-                . $loParamRefuse->renderUrl($lcSeparateur)
-                . $loParamRepondreA->renderUrl($lcSeparateur)
-                . $loParamRetour->renderUrl($lcSeparateur)
-                . $loParamAnnule->renderUrl($lcSeparateur)
-                . $loParamUrlPaybox->renderUrl($lcSeparateur);
-
-            return shell_exec($cmd);
+                break;
+            default: // paiement en 1x
+                $total = '&PBX_TOTAL=' . $this->achat->getProduit()->getMontantEnCentime();
+                break;
         }
 
-        return "Une erreur est survenue.";
+        return
+                $this->mode->renderUrl()
+                . $this->site->renderUrl($this->separateur)
+                . $this->rang->renderUrl($this->separateur)
+                . $this->identifiant->renderUrl($this->separateur)
+                . $total
+                . $this->devise->renderUrl($this->separateur)
+                . '&PBX_CMD=' . $this->paiement->getReference()
+                . '&PBX_PORTEUR="' . $this->client->getEmail() . '"'
+                . $this->retour->renderUrl($this->separateur)
+                . $this->effectue->renderUrl($this->separateur)
+                . $this->refuse->renderUrl($this->separateur)
+                . $this->repondreA->renderUrl($this->separateur)
+                . $this->retour->renderUrl($this->separateur)
+                . $this->annule->renderUrl($this->separateur)
+                . $this->hash->renderUrl($this->separateur)
+                //. $this->urlPaybox->renderUrl($this->separateur)
+                . '&PBX_TIME=' . $this->time
+                ;
+
+    }
+
+    public function form($hmac)
+    {
+        return
+                $this->mode->renderInput()
+                . $this->site->renderInput()
+                . $this->rang->renderInput()
+                . $this->identifiant->renderInput()
+                //. $total
+                . $this->devise->renderInput()
+                . '<input type="hidden"
+                        name="PBX_CMD"
+                        value="' . $this->paiement->getReference() . '">'
+                . '<input type="hidden"
+                        name="PBX_PORTEUR"
+                        value="' . $this->client->getEmail() . '">'
+                . $this->retour->renderInput()
+                . $this->effectue->renderInput()
+                . $this->refuse->renderInput()
+                . $this->repondreA->renderInput()
+                . $this->retour->renderInput()
+                . $this->annule->renderInput()
+                //. $this->urlPaybox->renderInput()
+                . $this->hash->renderInput()
+                . '<input type="hidden" name="PBX_TIME" value="'.$this->time.'">'
+                . '<input type="hidden" name="PBX_HMAC" value="'.$hmac.'">'
+                ;
     }
 }
