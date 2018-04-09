@@ -74,6 +74,7 @@
             </label>
         </p>
         <?= $form ?>
+        <input type="hidden" name="PBX_HMAC" value="<?= $hmac ?>">
         <p>En cliquant sur « Confirmer », vous allez être redirigé vers le site de PayBox.</p>
         <input value="Confirmer" type="submit"/>
     </form>
