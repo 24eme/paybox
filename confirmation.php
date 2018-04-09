@@ -6,7 +6,7 @@ require_once('api/persistence/factories/factAchat.class.php');
 require_once('api/persistence/factories/factParametre.class.php');
 require_once('api/persistence/objets/utils.php');
 
-require_once('api/action/actionPBX.class.php');
+require_once('api/action/paybox.class.php');
 
 if (!session_start()) {
     utils::display_error_page('La session n\'a pas démarré !');
@@ -106,10 +106,52 @@ $a->setPayementPk($idNewPayement);
 $a->setProduitPk($produit_id);
 factAchat::writeAchat($a);
 
-$paybox = new actionPBX($c, $y, $a);
+$paybox = new Paybox();
+
+$paybox->add('PBX_SITE', factParametre::getParametreByCode("PBX_SITE")->getValue());
+$paybox->add('PBX_RANG', factParametre::getParametreByCode("PBX_RANG")->getValue());
+$paybox->add('PBX_IDENTIFIANT', factParametre::getParametreByCode("PBX_IDENTIFIANT")->getValue());
+$paybox->add('PBX_DEVISE', factParametre::getParametreByCode("PBX_DEVISE")->getValue());
+$paybox->add('PBX_REPONDRE_A', factParametre::getParametreByCode("PBX_REPONDRE_A")->getValue());
+$paybox->add('PBX_MODE', factParametre::getParametreByCode("PBX_MODE")->getValue());
+$paybox->add('PBX_RETOUR', factParametre::getParametreByCode("PBX_RETOUR")->getValue());
+$paybox->add('PBX_EFFECTUE', factParametre::getParametreByCode("PBX_EFFECTUE")->getValue());
+$paybox->add('PBX_REFUSE', factParametre::getParametreByCode("PBX_REFUSE")->getValue());
+$paybox->add('PBX_ANNULE', factParametre::getParametreByCode("PBX_ANNULE")->getValue());
+$paybox->add('PBX_HASH', factParametre::getParametreByCode("PBX_HASH")->getValue());
+$paybox->add('PBX_TIME', date('c'));
+
+if ($y->getTypePaiement() === $paybox::UNEFOIS) {
+    $paybox->add('PBX_TOTAL', $p->getMontantEnCentime());
+} else {
+    $today = new DateTime();
+
+    $unMois = clone $today;
+    $unMois->add(new DateInterval('P1M')); // +1 mois
+
+    $deuxMois = clone $today;
+    $deuxMois->add(new DateInterval('P2M')); // +2 mois
+
+    // Retourne la valeur entière de la division
+    $tier = (int)($p->getMontantEnCentime() / 3);
+    $modulo = $p->getMontantEnCentime() % 3;
+
+    // Montant initial
+    $paybox->add('PBX_TOTAL', $tier);
+
+    // 1er prélèvement
+    $paybox->add('PBX_DATE1', $unMois->format('d/m/Y'));
+    $paybox->add('PBX_2MONT1', $tier);
+
+    // 2eme prélèvement
+    $paybox->add('PBX_DATE2', $deuxMois->format('d/m/Y'));
+    $paybox->add('PBX_2MONT2', ($tier + $modulo));
+}
+
+$form = $paybox->formulaire();
 
 // On crée la chaîne à hacher sans URLencodage
-$msg = $paybox->generate();
+$msg = $paybox->message();
 
 // On récupère la clé secrète HMAC (stockée dans une base de données par exemple) et que l'on renseigne dans la variable $keyTest;
 // Si la clé est en ASCII, On la transforme en binaire
@@ -125,37 +167,5 @@ $hmac = strtoupper(hash_hmac($paramHash->getValue(), $msg, $binKey));
 // On crée le formulaire à envoyer à PayboxSystem
 // ATTENTION : l'ordre des champs est extrêmement important, il doit
 // correspondre exactement à l'ordre des champs dans la chaîne hachée
-$form = $paybox->form($hmac);
 
-// On récupère la date au format ISO-8601
-//$dateTime = date('c');
-/*
-// On crée la chaîne à hacher sans URLencodage
-$msg = $paramSite->renderUrl() .
-    $paramRang->renderUrl('&') .
-    $paramIdentifiant->renderUrl('&') .
-    "&PBX_TOTAL=" . $_POST['Montant'] .
-    $paramDevise->renderUrl("&") .
-    "&PBX_CMD=" . $refPayement .
-    "&PBX_PORTEUR=" . $_POST['email'] .
-    $paramRepondreA->renderUrl('&') .
-    "&PBX_RETOUR=Mt:M;Ref:R;Auto:A;Erreur:E" .
-    $paramHash->renderUrl('&') .
-    "&PBX_TIME=" . $dateTime;
-// On récupère la clé secrète HMAC (stockée dans une base de données par exemple) et que l'on renseigne dans la variable $keyTest;
-// Si la clé est en ASCII, On la transforme en binaire
-$paramPrivKey = factParametre::getParametreByCode("PBX_PRIV_KEY");
-$binKey = pack("H*", $paramPrivKey->getValue());
-// On calcule l'empreinte (à renseigner dans le paramètre PBX_HMAC) grâce à la fonction hash_hmac et
-// la clé binaire
-// On envoie via la variable PBX_HASH l'algorithme de hachage qui a été utilisé (SHA512 dans ce cas)
-// Pour afficher la liste des algorithmes disponibles sur votre environnement, décommentez la ligne
-// suivante
-//print_r(hash_algos());
-$hmac = strtoupper(hash_hmac($paramHash->getValue(), $msg, $binKey));
-// La chaîne sera envoyée en majuscules, d'où l'utilisation de strtoupper()
-// On crée le formulaire à envoyer à PayboxSystem
-// ATTENTION : l'ordre des champs est extrêmement important, il doit
-// correspondre exactement à l'ordre des champs dans la chaîne hachée
- */
 include VIEW . '/confirm.' . $lang . '.phtml';
