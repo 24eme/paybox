@@ -1,6 +1,10 @@
 <?php
 
 /**
+ * Cette classe permet de gérer les actions relatives à Paybox
+ * La première étant de générer les élements envoyés au service,
+ * et le deuxième de vérifier l'état des serveurs Paybox
+ *
  * @author Gabriel Poma
  */
 
@@ -8,8 +12,14 @@ class Paybox {
     const UNEFOIS = 1;
     const TROISFOIS = 2;
 
+    const CHECK_URL = '/load.html';
+    const ENTRY_POINT = '/php/';
+
     /** @var array $elements */
     private $elements = [];
+
+    /** @var string $url Url de paybox */
+    private $url = '';
 
     /**
      * Constructeur. On remet à zéro les variables
@@ -39,6 +49,30 @@ class Paybox {
     public function remove($cle)
     {
         unset($this->elements[$cle]);
+    }
+
+    /**
+     * Ajoute une url
+     *
+     * @param string $url Une url
+     */
+    public function setUrl($url)
+    {
+        $this->url = filter_var($url, FILTER_VALIDATE_URL);
+
+        if ($this->url === false) {
+            throw new Exception('BadUrlException: Bad URL. This is not a valid URL');
+        }
+    }
+
+    /**
+     * Retourne l'Url à appeler avec le formulaire
+     *
+     * @return string L'url
+     */
+    public function getUrl()
+    {
+        return $this->url . self::ENTRY_POINT;
     }
 
     /**
@@ -82,6 +116,25 @@ class Paybox {
     }
 
     /**
+     * Vérifie que les serveurs paybox sont disponibles
+     *
+     * @return bool Disponible ou non
+     */
+    public function check()
+    {
+        $dom = new DOMDocument();
+        $dom->loadHTMLFile($this->url . self::CHECK_URL);
+
+        $status = '';
+        $element = $dom->getElementById('server_status');
+        if ($element) {
+            $status = $element->textContent;
+        }
+
+        return $status === 'OK';
+    }
+
+    /**
      * Fonction de test pour vérifier les valeurs
      *
      * @return array
@@ -93,4 +146,6 @@ class Paybox {
             'message' => $this->message()
         ];
     }
+
+
 }

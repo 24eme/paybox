@@ -64,6 +64,16 @@ if (!$p->isOpen()) {
     utils::display_error_page('Le produit que vous voulez est indisponible.');
 }
 
+// Avant toute opération, on vérifie que les serveurs de Paybox sont
+// disponible !
+$paybox = new Paybox();
+$paybox->setUrl(factParametre::getParametreByCode("PBX_PAYBOX")->getValue());
+
+if (! $paybox->check()) {
+    utils::display_error_page('Les serveurs de Paybox ne sont pas disponible
+        pour le moment. Merci de réessayer ultérieurement.');
+}
+
 //on instancie le client
 $paramRefSepar = factParametre::getParametreByCode("REF_SEPA");
 $refClient = implode($paramRefSepar->getValue(), [
@@ -106,14 +116,15 @@ $a->setPayementPk($idNewPayement);
 $a->setProduitPk($produit_id);
 factAchat::writeAchat($a);
 
-$paybox = new Paybox();
-
+// On renseigne les informations qui seront envoyés à Paybox
 $paybox->add('PBX_SITE', factParametre::getParametreByCode("PBX_SITE")->getValue());
 $paybox->add('PBX_RANG', factParametre::getParametreByCode("PBX_RANG")->getValue());
 $paybox->add('PBX_IDENTIFIANT', factParametre::getParametreByCode("PBX_IDENTIFIANT")->getValue());
 $paybox->add('PBX_DEVISE', factParametre::getParametreByCode("PBX_DEVISE")->getValue());
 $paybox->add('PBX_REPONDRE_A', factParametre::getParametreByCode("PBX_REPONDRE_A")->getValue());
 $paybox->add('PBX_MODE', factParametre::getParametreByCode("PBX_MODE")->getValue());
+$paybox->add('PBX_CMD', $y->getReference());
+$paybox->add('PBX_PORTEUR', $c->getEmail());
 $paybox->add('PBX_RETOUR', factParametre::getParametreByCode("PBX_RETOUR")->getValue());
 $paybox->add('PBX_EFFECTUE', factParametre::getParametreByCode("PBX_EFFECTUE")->getValue());
 $paybox->add('PBX_REFUSE', factParametre::getParametreByCode("PBX_REFUSE")->getValue());
@@ -121,6 +132,7 @@ $paybox->add('PBX_ANNULE', factParametre::getParametreByCode("PBX_ANNULE")->getV
 $paybox->add('PBX_HASH', factParametre::getParametreByCode("PBX_HASH")->getValue());
 $paybox->add('PBX_TIME', date('c'));
 
+// Différentes informations si le paiement est en plusieurs fois
 if ($y->getTypePaiement() === $paybox::UNEFOIS) {
     $paybox->add('PBX_TOTAL', $p->getMontantEnCentime());
 } else {
@@ -148,7 +160,11 @@ if ($y->getTypePaiement() === $paybox::UNEFOIS) {
     $paybox->add('PBX_2MONT2', ($tier + $modulo));
 }
 
-$form = $paybox->formulaire();
+// On génère le formulaire
+$formhidden = $paybox->formulaire();
+
+// On récupère l'url à appeler dans le formulaire
+$formurl = $paybox->getUrl();
 
 // On crée la chaîne à hacher sans URLencodage
 $msg = $paybox->message();
