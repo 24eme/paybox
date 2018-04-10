@@ -2,3 +2,8 @@
   Order allow,deny
   Deny from all
 </FilesMatch>
+
+<Files subdirectory/*>
+  Order allow,deny
+  deny from all
+</Files>
