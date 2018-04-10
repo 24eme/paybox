@@ -134,7 +134,7 @@ $paybox->add('PBX_TIME', date('c'));
 
 // Différentes informations si le paiement est en plusieurs fois
 if ($y->getTypePaiement() === $paybox::UNEFOIS) {
-    $paybox->add('PBX_TOTAL', $p->getMontantEnCentime());
+    $paybox->add('PBX_TOTAL', sprintf("%03u", $p->getMontantEnCentime()));
 } else {
     $today = new DateTime();
 
@@ -149,15 +149,15 @@ if ($y->getTypePaiement() === $paybox::UNEFOIS) {
     $modulo = $p->getMontantEnCentime() % 3;
 
     // Montant initial
-    $paybox->add('PBX_TOTAL', $tier);
+    $paybox->add('PBX_TOTAL', sprintf("%03u", $tier));
 
     // 1er prélèvement
     $paybox->add('PBX_DATE1', $unMois->format('d/m/Y'));
-    $paybox->add('PBX_2MONT1', $tier);
+    $paybox->add('PBX_2MONT1', sprintf("%03u", $tier));
 
     // 2eme prélèvement
     $paybox->add('PBX_DATE2', $deuxMois->format('d/m/Y'));
-    $paybox->add('PBX_2MONT2', ($tier + $modulo));
+    $paybox->add('PBX_2MONT2', sprintf("%03u", ($tier + $modulo)));
 }
 
 // On génère le formulaire
