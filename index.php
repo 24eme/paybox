@@ -38,4 +38,4 @@ if (!is_object($produit) || !$produit->isOpen()) {
 
 $_SESSION['produit'] = $produit->getKey();
 
-include VIEW . '/index.student.phtml';
+include VIEW . '/index.phtml';

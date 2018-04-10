@@ -60,7 +60,7 @@
         <strong>Produit :</strong> <?= $p->getlibelle(); ?>
     </p>
 
-    <form method="POST" action="/action.php">
+        <form method="POST" action="<?= $formurl ?>">
         <div class="warning">
             <h3>Attention</h3>
             <p>Avant de lancer les opérations de paiement, vérifiez que les conditions de votre compte permettent sa
@@ -73,8 +73,8 @@
                 J'ai vérifié que les conditions de mon compte permettent la réalisation du paiement.
             </label>
         </p>
-        <input name="refPayement" value="<?= $refPayement ?>" type="hidden"/>
-        <input name="refClient" value="<?= $refClient ?>" type="hidden"/>
+        <?= $formhidden ?>
+        <input type="hidden" name="PBX_HMAC" value="<?= $hmac ?>">
         <p>En cliquant sur « Confirmer », vous allez être redirigé vers le site de PayBox.</p>
         <input value="Confirmer" type="submit"/>
     </form>
