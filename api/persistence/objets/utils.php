@@ -132,41 +132,6 @@ class utils
         }
         return $page;
     }
-    /*
-       public static function buildRefClient($psSalt) {
-       $paramRefSepar = factParametre::getParametreByCode("REF_SEPA");
-       return $psSalt.$paramRefSepar->getValue()
-       .$_POST['pers_id'] . $paramRefSepar->getValue()
-       .$_POST['promo'] . $paramRefSepar->getValue()
-       .$_POST['A_Etude'];
-       }
-
-       public static function buildRefPayement($psSalt) {
-       $paramRefSepar = factParametre::getParametreByCode("REF_SEPA");
-       return $psSalt.$paramRefSepar->getValue().
-       $_POST['pers_id'] . $paramRefSepar->getValue() .
-       $_POST['nom'] . $paramRefSepar->getValue() .
-       $_POST['prenom'] . $paramRefSepar->getValue() .
-       $_POST['email'] . $paramRefSepar->getValue() .
-       $_POST['promo'] . $paramRefSepar->getValue() .
-       $_POST['A_Etude'];
-       }*/
-
-    public static function buildMessage()
-    {
-        $paramRefSepar = factParametre::getParametreByCode("REF_SEPA");
-        return $paramSite->renderUrl() .
-            $paramRang->renderUrl('&') .
-            $paramIdentifiant->renderUrl('&') .
-            "&PBX_TOTAL=" . $_POST['Montant'] .
-            $paramDevise->renderUrl("&") .
-            "&PBX_CMD=" . $refPayement .
-            "&PBX_PORTEUR=" . $_POST['email'] .
-            $paramRepondreA->renderUrl('&') .
-            "&PBX_RETOUR=Mt:M;Ref:R;Auto:A;Erreur:E" .
-            $paramHash->renderUrl('&') .
-            "&PBX_TIME=" . $dateTime;
-    }
 
     public static function verify_sign($data, $sign)
     {
