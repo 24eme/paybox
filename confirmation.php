@@ -25,12 +25,6 @@ $POST = filter_input_array(INPUT_POST, $args);
 $produit_id = (isset($_SESSION['produit'])) ? $_SESSION['produit'] : false;
 unset($_SESSION['produit']);
 
-$lang = 'fr';
-
-if (!in_array($lang, ['fr', 'en'])) {
-    utils::display_error_page('Erreur Interne <br> veuillez Contacter la DSI', 'Langue non supportée : ' . $lang);
-}
-
 if ($produit_id === false) {
     $lsComplement = 'Mauvais id produit : ' . $produit_id;
     utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
@@ -184,4 +178,4 @@ $hmac = strtoupper(hash_hmac($paramHash->getValue(), $msg, $binKey));
 // ATTENTION : l'ordre des champs est extrêmement important, il doit
 // correspondre exactement à l'ordre des champs dans la chaîne hachée
 
-include VIEW . '/confirm.' . $lang . '.phtml';
+include VIEW . '/confirm.phtml';
