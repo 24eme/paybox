@@ -36,11 +36,6 @@ if ($produit_id === false) {
     utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
 }
 
-// Si la variable paiement incorrecte -> paiement en 1x par défaut
-if ($POST['paiement'] === false || $POST['paiement'] < 1 || $POST['paiement'] > 2) {
-    $POST['paiement'] = 1;
-}
-
 if (!isset($POST['nom'], $POST['prenom'], $POST['email'], $POST['persId'], $POST['paiement'])) {
     $lsComplement = 'Un parametre est manquant !!!' . PHP_EOL
         . 'Array dump: ' . print_r($POST, true) . PHP_EOL;
@@ -62,6 +57,11 @@ if (!is_object($p)) {
 
 if (!$p->isOpen()) {
     utils::display_error_page('Le produit que vous voulez est indisponible.');
+}
+
+// Si la variable paiement incorrecte -> paiement en 1x par défaut
+if ($POST['paiement'] === false || $POST['paiement'] < 1 || $POST['paiement'] > $p->getTypePaiement()) {
+    $POST['paiement'] = 1;
 }
 
 // Avant toute opération, on vérifie que les serveurs de Paybox sont
