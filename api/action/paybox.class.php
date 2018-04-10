@@ -8,7 +8,8 @@
  * @author Gabriel Poma
  */
 
-class Paybox {
+class Paybox
+{
     const UNEFOIS = 1;
     const TROISFOIS = 2;
 
@@ -92,7 +93,7 @@ class Paybox {
     public function formulaire()
     {
         $form = '';
-        foreach($this->elements as $cle => $valeur) {
+        foreach ($this->elements as $cle => $valeur) {
             $form .= '<input type="hidden"
                 name="' . $cle . '"
                 value="' . $valeur . '"
@@ -109,7 +110,7 @@ class Paybox {
     public function message($separateur = '&')
     {
         $message = '';
-        foreach($this->elements as $cle => $valeur) {
+        foreach ($this->elements as $cle => $valeur) {
             $message .= "$cle=$valeur$separateur";
         }
         return substr($message, 0, -1);
@@ -146,6 +147,4 @@ class Paybox {
             'message' => $this->message()
         ];
     }
-
-
 }
