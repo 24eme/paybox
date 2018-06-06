@@ -1,12 +1,14 @@
 <?php
-require_once('api/persistence/factories/factProduits.class.php');
-require_once('api/persistence/factories/factClient.class.php');
-require_once('api/persistence/factories/factPayement.class.php');
-require_once('api/persistence/factories/factAchat.class.php');
-require_once('api/persistence/factories/factParametre.class.php');
-require_once('api/persistence/objets/utils.php');
+require '../define.php';
 
-require_once('api/action/paybox.class.php');
+require_once BASE . '/api/persistence/factories/factProduits.class.php';
+require_once BASE . '/api/persistence/factories/factClient.class.php';
+require_once BASE . '/api/persistence/factories/factPayement.class.php';
+require_once BASE . '/api/persistence/factories/factAchat.class.php';
+require_once BASE . '/api/persistence/factories/factParametre.class.php';
+require_once BASE . '/api/persistence/objets/utils.php';
+
+require_once BASE . '/api/action/paybox.class.php';
 
 if (!session_start()) {
     utils::display_error_page('La session n\'a pas démarré !');

@@ -1,13 +1,12 @@
 <?php
 
-include 'define.php';
-include __DIR__.'/api/persistence/objets/utils.php';
-include __DIR__.'/api/persistence/factories/factProduits.class.php';
+require '../define.php';
+require BASE . '/api/persistence/objets/utils.php';
+require BASE . '/api/persistence/factories/factProduits.class.php';
 
 if (!session_start()) {
     utils::display_error_page('La session n\'a pas démarré !');
 }
-
 
 $args = array(
     'produit' => FILTER_VALIDATE_INT,

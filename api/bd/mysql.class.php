@@ -1,5 +1,4 @@
 <?php
-//require_once 'connexion.class.php';
 
 /**
  * @author david.richard

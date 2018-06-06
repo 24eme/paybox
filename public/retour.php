@@ -1,7 +1,7 @@
 <?php
 
-include 'define.php';
-include BASE.'/api/persistence/objets/utils.php';
+require '../define.php';
+require BASE . '/api/persistence/objets/utils.php';
 
 $args = array(
     'action' => FILTER_DEFAULT,
