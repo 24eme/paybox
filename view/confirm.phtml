@@ -67,6 +67,13 @@
                 réalisation
                 (plafond et/ou approvisionnement du compte).</p>
         </div>
+        <?php if ($y->getTypePaiement() === $paybox::TROISFOIS): ?>
+            <div class="warning">
+                <h3>Attention</h3>
+                <p>Vous allez effectuer la première étape d'un paiement en trois fois.<br>
+                    Les deux prélèvements suivants se feront automatiquement sur votre compte, à un mois d'intervalle chacun. <strong>Vous n'avez pas à ré initier le processus</strong>.</p>
+            </div>
+        <?php endif ?>
         <p class="control">
             <label>
                 <input type="checkbox" required>
