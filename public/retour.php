@@ -1,7 +1,12 @@
 <?php
 
+use App\Utils;
+
+require '../app/autoload.php';
+
 require '../define.php';
-require BASE . '/api/persistence/objets/utils.php';
+
+//require BASE . '/api/persistence/objets/utils.php';
 
 $args = array(
     'action' => FILTER_DEFAULT,
@@ -13,7 +18,7 @@ $args = array(
 
 $GET = filter_input_array(INPUT_GET, $args);
 $data['reference'] = $GET['Ref'];
-$data['message_retour'] = utils::code_retour($GET['Reponse']);
+$data['message_retour'] = Utils::code_retour($GET['Reponse']);
 
 switch ($GET['action']) {
     case 'effectue':
@@ -29,7 +34,7 @@ switch ($GET['action']) {
         $page_retour = VIEW.'/urlretour/attente.phtml';
         break;
     default:
-        utils::display_error_page('(╯°□°）╯︵ ┻━┻');
+        Utils::display_error_page('(╯°□°）╯︵ ┻━┻');
 }
 
-echo utils::render($page_retour, $data);
+echo Utils::render($page_retour, $data);

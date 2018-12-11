@@ -1,24 +1,30 @@
 <?php
 
+use App\Utils;
+use App\Factory\Paiement;
+use App\Factory\Achat;
+
+require '../app/autoload.php';
+
 require '../define.php';
 
-require_once BASE . '/api/persistence/objets/utils.php';
-require_once BASE . '/api/persistence/factories/factPayement.class.php';
-require_once BASE . '/api/persistence/factories/factParametre.class.php';
-require_once BASE . '/api/persistence/factories/factProduits.class.php';
-require_once BASE . '/api/persistence/factories/factAchat.class.php';
-require_once BASE . '/api/persistence/factories/factClient.class.php';
+//require_once BASE . '/api/persistence/objets/utils.php';
+//require_once BASE . '/api/persistence/factories/factPayement.class.php';
+//require_once BASE . '/api/persistence/factories/factParametre.class.php';
+//require_once BASE . '/api/persistence/factories/factProduits.class.php';
+//require_once BASE . '/api/persistence/factories/factAchat.class.php';
+//require_once BASE . '/api/persistence/factories/factClient.class.php';
 
 $GET = filter_input_array(INPUT_GET, FILTER_DEFAULT);
 
-utils::log(LOG_FILE, '--------Nouvelle entrée--------');
+Utils::log(LOG_FILE, '--------Nouvelle entrée--------');
 
 if (DEBUG) {
-    utils::debug($GET);
+    Utils::debug($GET);
 }
 
 if ($GET['Auto'] === null) {
-    utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' | N° Autorisation nul. Paiement refuse.');
+    Utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' | N° Autorisation nul. Paiement refuse.');
 }
 
 /**
@@ -30,28 +36,28 @@ $query = preg_replace('/(.*)(?|&)' . 'Sign' . '=[^&]+?(&)(.*)/i', '$1$2$4', $que
 $query = substr($query, 0, -1);
 
 if (DEBUG) {
-    utils::debug($query);
+    Utils::debug($query);
 }
 
 /**
 * On vérifie la signature
 */
-if ($GET['Sign'] === null || !utils::verify_sign($query, base64_decode($GET['Sign']))) {
-    utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' | Signature non valide : ' . $GET['Sign']);
+if ($GET['Sign'] === null || !Utils::verify_sign($query, base64_decode($GET['Sign']))) {
+    Utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' | Signature non valide : ' . $GET['Sign']);
     exit;
 }
 
 // On récupère les informations du paiement engagé
-$refPaiement = factPayement::getPayementByReference($GET['Ref']);
+$refPaiement = Paiement::getPayementByReference($GET['Ref']);
 if (!is_object($refPaiement)) {
-    utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' n\'est pas une référence valide');
+    Utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' n\'est pas une référence valide');
     exit;
 }
 
-$message_retour = utils::code_retour($GET['Reponse']);
+$message_retour = Utils::code_retour($GET['Reponse']);
 
 // On récupère les informations liés au paiement engagé
-$achat = factAchat::getAchatByPayement($refPaiement->getKey());
+$achat = Achat::getAchatByPayement($refPaiement->getKey());
 $client = $achat->getClient();
 $produit = $achat->getProduit();
 
@@ -59,7 +65,7 @@ $produit = $achat->getProduit();
  * Désactivation en attendant de savoir si l'IPN est appelée plusieurs fois ou non
  *
 if ($produit->getMontantEnCentime() != $GET['Mt']) {
-    utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' | Le montant n\'est pas bon');
+    Utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' | Le montant n\'est pas bon');
     exit;
 }
  */
@@ -104,28 +110,28 @@ switch ($GET['Reponse']) {
 
 try {
     // Nouveau paiement
-    $y = factPayement::getNewPayement();
+    $y = Paiement::getNewPayement();
     $y->setDate();
     $y->setPStatus($status);
     $y->setReference($GET['Ref']);
     $y->setMontant($data['montant']);
     $y->setTypePaiement($refPaiement->getTypePaiement());
-    $idNewPayement = factPayement::writePayement($y);
+    $idNewPayement = Paiement::writePayement($y);
 
     // Nouvel achat lié au nouveau paiement
-    $a = factAchat::getNewAchat();
+    $a = Achat::getNewAchat();
     $a->setClientPk($client->getKey());
     $a->setPayementPk($idNewPayement);
     $a->setProduitPk($produit->getKey());
-    factAchat::writeAchat($a);
+    Achat::writeAchat($a);
 
-    utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' ' . $message_retour);
+    Utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' ' . $message_retour);
 
-    utils::mail(
+    Utils::mail(
         $client->getEmail(),
         $template,
         $data
     );
 } catch (Exception $e) {
-    utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' REPONSE: ' . $GET['Reponse'] . ' ' . $message_retour . ' | ' . $e->getMessage());
+    Utils::log(LOG_FILE, 'REF: ' . $GET['Ref'] . ' REPONSE: ' . $GET['Reponse'] . ' ' . $message_retour . ' | ' . $e->getMessage());
 }
