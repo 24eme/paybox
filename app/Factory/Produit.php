@@ -3,7 +3,7 @@
 namespace App\Factory;
 
 use App\Factory\Generic;
-use App\Object\Produit;
+use App\Object\Produit as OProduit;
 use App\Database\Mysql;
 
 //require_once('api/bd/mysql.class.php');
@@ -14,7 +14,7 @@ use App\Database\Mysql;
  * @author david.richard
  *
  */
-class Produits extends Generic
+class Produit extends Generic
 {
     /**
      * @var array
@@ -43,7 +43,7 @@ class Produits extends Generic
     /**
      * @var string
      */
-    protected static $csClass = Produit::class;
+    protected static $csClass = OProduit::class;
 
     /**
      * @var string
@@ -85,7 +85,7 @@ class Produits extends Generic
         } elseif ($poProduit->_isUpdate()) {
             Mysql::getmysql()->updateData(self::$csTable, self::$csPrimaryKey, $laData);
         } else {
-            throw new Exception('Objet non enregistré : Pas un nouveau, pas une MAJ');
+            throw new \Exception('Objet non enregistré : Pas un nouveau, pas une MAJ');
         }
     }
 

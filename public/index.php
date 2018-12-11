@@ -1,6 +1,6 @@
 <?php
 
-use App\Factory\Produits;
+use App\Factory\Produit;
 use App\Utils;
 
 require '../app/autoload.php';
@@ -31,7 +31,7 @@ if (!$GET['produit']) {
     Utils::display_error_page('Paramètre requis manquant.');
 }
 
-$produit = Produits::getProduitByPk($GET['produit']);
+$produit = Produit::getProduitByPk($GET['produit']);
 
 if (!is_object($produit) || !$produit->isOpen()) {
     Utils::display_error_page(
