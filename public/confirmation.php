@@ -1,17 +1,28 @@
 <?php
+
+use App\Factory\Produit;
+use App\Factory\Client;
+use App\Factory\Paiement;
+use App\Factory\Achat;
+use App\Factory\Parametre;
+use App\Provider\Paybox;
+use App\Utils;
+
+require '../app/autoload.php';
+
 require '../define.php';
 
-require_once BASE . '/api/persistence/factories/factProduits.class.php';
-require_once BASE . '/api/persistence/factories/factClient.class.php';
-require_once BASE . '/api/persistence/factories/factPayement.class.php';
-require_once BASE . '/api/persistence/factories/factAchat.class.php';
-require_once BASE . '/api/persistence/factories/factParametre.class.php';
-require_once BASE . '/api/persistence/objets/utils.php';
+//require_once BASE . '/api/persistence/factories/factProduits.class.php';
+//require_once BASE . '/api/persistence/factories/factClient.class.php';
+//require_once BASE . '/api/persistence/factories/factPayement.class.php';
+//require_once BASE . '/api/persistence/factories/factAchat.class.php';
+//require_once BASE . '/api/persistence/factories/factParametre.class.php';
+//require_once BASE . '/api/persistence/objets/utils.php';
 
-require_once BASE . '/api/action/paybox.class.php';
+//require_once BASE . '/api/action/paybox.class.php';
 
 if (!session_start()) {
-    utils::display_error_page('La session n\'a pas démarré !');
+    Utils::display_error_page('La session n\'a pas démarré !');
 }
 
 $args = array(
@@ -25,34 +36,34 @@ $args = array(
 $POST = filter_input_array(INPUT_POST, $args);
 
 $produit_id = (isset($_SESSION['produit'])) ? $_SESSION['produit'] : false;
-unset($_SESSION['produit']);
+// unset($_SESSION['produit']);
 
 if ($produit_id === false) {
     $lsComplement = 'Mauvais id produit : ' . $produit_id;
-    utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
+    Utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
 }
 
 if (!isset($POST['nom'], $POST['prenom'], $POST['email'], $POST['persId'], $POST['paiement'])) {
     $lsComplement = 'Un parametre est manquant !!!' . PHP_EOL
         . 'Array dump: ' . print_r($POST, true) . PHP_EOL;
-    utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
+    Utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
 }
 
 if (empty($POST['nom']) || empty($POST['prenom']) || empty($POST['email']) || empty($POST['persId']) || empty($POST['paiement'])) {
     $lsComplement = 'Un parametre est vide !!!' . PHP_EOL
         . 'Array dump: ' . print_r($POST, true) . PHP_EOL;
-    utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
+    Utils::display_error_page('Erreur Interne <br> Veuillez contacter la DSI', $lsComplement);
 }
 
-$p = factProduits::getProduitByPk($produit_id);
+$p = Produit::getProduitByPk($produit_id);
 
 if (!is_object($p)) {
     $lsComplement = 'Produit inconnu => Pk Produit = ' . $produit_id;
-    utils::display_error_page('Erreur Interne <br> veuillez Contacter la DSI', $lsComplement);
+    Utils::display_error_page('Erreur Interne <br> veuillez Contacter la DSI', $lsComplement);
 }
 
 if (!$p->isOpen()) {
-    utils::display_error_page('Le produit que vous voulez est indisponible.');
+    Utils::display_error_page('Le produit que vous voulez est indisponible.');
 }
 
 // Si la variable paiement incorrecte -> paiement en 1x par défaut
@@ -63,29 +74,29 @@ if ($POST['paiement'] === false || $POST['paiement'] < 1 || $POST['paiement'] > 
 // Avant toute opération, on vérifie que les serveurs de Paybox sont
 // disponible !
 $paybox = new Paybox();
-$paybox->setUrl(factParametre::getParametreByCode("PBX_PAYBOX")->getValue());
+$paybox->setUrl(Parametre::getParametreByCode("PBX_PAYBOX")->getValue());
 
 if (! $paybox->check()) {
-    utils::display_error_page('Les serveurs de Paybox ne sont pas disponible
+    Utils::display_error_page('Les serveurs de Paybox ne sont pas disponible
         pour le moment. Merci de réessayer ultérieurement.');
 }
 
 //on instancie le client
-$paramRefSepar = factParametre::getParametreByCode("REF_SEPA");
+$paramRefSepar = Parametre::getParametreByCode("REF_SEPA");
 $refClient = implode($paramRefSepar->getValue(), [
     $p->getSalt(),
     $POST['persId']
 ]);
-$c = factClient::getClientByReference($refClient);
+$c = Client::getClientByReference($refClient);
 
 if (is_null($c)) {
-    $c = factClient::getNewClient();
+    $c = Client::getNewClient();
     $c->setNom($POST['nom']);
     $c->setPrenom($POST['prenom']);
     $c->setIdentifiant($refClient);
     $c->setEmail($POST['email']);
-    factClient::writeClient($c);
-    $c = factClient::getClientByReference($refClient);
+    Client::writeClient($c);
+    $c = Client::getClientByReference($refClient);
 }
 
 // On instancie la référence du paiement
@@ -97,35 +108,35 @@ $refPayement = implode($paramRefSepar->getValue(), [
 ]);
 
 // A chaque nouvelle commande, on instancie un nouveau paiement
-$y = factPayement::getNewPayement();
+$y = Paiement::getNewPayement();
 $y->setDate();
 $y->setPStatus(0);
 $y->setReference($refPayement);
 $y->setMontant(0);
 // Paiement en 1x ou 3x
 $y->setTypePaiement((int)$POST['paiement']);
-$idNewPayement = factPayement::writePayement($y);
+$idNewPayement = Paiement::writePayement($y);
 
-$a = factAchat::getNewAchat();
+$a = Achat::getNewAchat();
 $a->setClientPk($c->getKey());
 $a->setPayementPk($idNewPayement);
 $a->setProduitPk($produit_id);
-factAchat::writeAchat($a);
+Achat::writeAchat($a);
 
 // On renseigne les informations qui seront envoyés à Paybox
-$paybox->add('PBX_SITE', factParametre::getParametreByCode("PBX_SITE")->getValue());
-$paybox->add('PBX_RANG', factParametre::getParametreByCode("PBX_RANG")->getValue());
-$paybox->add('PBX_IDENTIFIANT', factParametre::getParametreByCode("PBX_IDENTIFIANT")->getValue());
-$paybox->add('PBX_DEVISE', factParametre::getParametreByCode("PBX_DEVISE")->getValue());
-$paybox->add('PBX_REPONDRE_A', factParametre::getParametreByCode("PBX_REPONDRE_A")->getValue());
-$paybox->add('PBX_MODE', factParametre::getParametreByCode("PBX_MODE")->getValue());
+$paybox->add('PBX_SITE', Parametre::getParametreByCode("PBX_SITE")->getValue());
+$paybox->add('PBX_RANG', Parametre::getParametreByCode("PBX_RANG")->getValue());
+$paybox->add('PBX_IDENTIFIANT', Parametre::getParametreByCode("PBX_IDENTIFIANT")->getValue());
+$paybox->add('PBX_DEVISE', Parametre::getParametreByCode("PBX_DEVISE")->getValue());
+$paybox->add('PBX_REPONDRE_A', Parametre::getParametreByCode("PBX_REPONDRE_A")->getValue());
+$paybox->add('PBX_MODE', Parametre::getParametreByCode("PBX_MODE")->getValue());
 $paybox->add('PBX_CMD', $y->getReference());
 $paybox->add('PBX_PORTEUR', $c->getEmail());
-$paybox->add('PBX_RETOUR', factParametre::getParametreByCode("PBX_RETOUR")->getValue());
-$paybox->add('PBX_EFFECTUE', factParametre::getParametreByCode("PBX_EFFECTUE")->getValue());
-$paybox->add('PBX_REFUSE', factParametre::getParametreByCode("PBX_REFUSE")->getValue());
-$paybox->add('PBX_ANNULE', factParametre::getParametreByCode("PBX_ANNULE")->getValue());
-$paybox->add('PBX_HASH', factParametre::getParametreByCode("PBX_HASH")->getValue());
+$paybox->add('PBX_RETOUR', Parametre::getParametreByCode("PBX_RETOUR")->getValue());
+$paybox->add('PBX_EFFECTUE', Parametre::getParametreByCode("PBX_EFFECTUE")->getValue());
+$paybox->add('PBX_REFUSE', Parametre::getParametreByCode("PBX_REFUSE")->getValue());
+$paybox->add('PBX_ANNULE', Parametre::getParametreByCode("PBX_ANNULE")->getValue());
+$paybox->add('PBX_HASH', Parametre::getParametreByCode("PBX_HASH")->getValue());
 $paybox->add('PBX_TIME', date('c'));
 
 // Différentes informations si le paiement est en plusieurs fois
@@ -167,13 +178,13 @@ $msg = $paybox->message();
 
 // On récupère la clé secrète HMAC (stockée dans une base de données par exemple) et que l'on renseigne dans la variable $keyTest;
 // Si la clé est en ASCII, On la transforme en binaire
-$paramPrivKey = factParametre::getParametreByCode("PBX_PRIV_KEY");
+$paramPrivKey = Parametre::getParametreByCode("PBX_PRIV_KEY");
 $binKey = pack("H*", $paramPrivKey->getValue());
 
 // On calcule l'empreinte (à renseigner dans le paramètre PBX_HMAC) grâce à la fonction hash_hmac et
 // la clé binaire
 // On envoie via la variable PBX_HASH l'algorithme de hachage qui a été utilisé (SHA512 dans ce cas)
-$paramHash = factParametre::getParametreByCode("PBX_HASH");
+$paramHash = Parametre::getParametreByCode("PBX_HASH");
 $hmac = strtoupper(hash_hmac($paramHash->getValue(), $msg, $binKey));
 // La chaîne sera envoyée en majuscules, d'où l'utilisation de strtoupper()
 // On crée le formulaire à envoyer à PayboxSystem
