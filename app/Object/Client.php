@@ -1,18 +1,26 @@
 <?php
-require_once 'objGeneric.class.php';
+
+namespace App\Object;
+
+use App\Object\Generic;
 
 /**
  *
  * @author david.richard
  *
  */
-class client extends objGeneric
+class Client extends Generic
 {
     protected $ciPk;
+
     protected $csNom;
+
     protected $csPrenom;
+
     protected $csIdentifiant;
+
     protected $csEmail;
+
     public function __construct()
     {
         $liNbArg = func_num_args();
@@ -28,22 +36,27 @@ class client extends objGeneric
                 die('Utilise la factory !!');
         }
     }
+
     public function getNom()
     {
         return $this->__get("csNom");
     }
+
     public function getPrenom()
     {
         return $this->__get("csPrenom");
     }
+
     public function getKey()
     {
         return $this->__get("ciPk");
     }
+
     public function getIdentifiant()
     {
         return $this->__get("csIdentifiant");
     }
+
     public function setNom($psNom)
     {
         if ($psNom != $this->csNom) {
@@ -51,6 +64,7 @@ class client extends objGeneric
             $this->_update();
         }
     }
+
     public function setPrenom($pPrenom)
     {
         if ($pPrenom != $this->csPrenom) {
@@ -58,6 +72,7 @@ class client extends objGeneric
             $this->_update();
         }
     }
+
     public function setIdentifiant($pId)
     {
         if ($pId != $this->csIdentifiant) {

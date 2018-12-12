@@ -1,13 +1,17 @@
 <?php
-require_once('api/persistence/objets/payement.class.php');
-require_once('api/persistence/factories/factGeneric.class.php');
+
+namespace App\Factory;
+
+use App\Factory\Generic;
+use App\Object\Paiement as OPaiement;
+use App\Database\Mysql;
 
 /**
  *
  * @author david.richard
  *
  */
-class factPayement extends factGeneric
+class Paiement extends Generic
 {
     /**
      *
@@ -36,7 +40,7 @@ class factPayement extends factGeneric
      *
      * @var string
      */
-    protected static $csClass = 'payement';
+    protected static $csClass = OPaiement::class;
     /**
      *
      * @var string
@@ -71,12 +75,12 @@ class factPayement extends factGeneric
         }
         if ($poPayement->_isNew()) {
             unset($laData['y_pk']); // obligatoire car la colonne est en auto_increment
-            mysql::getmysql()->insertData(self::$csTable, $laData);
-            return mysql::getmysql()->getLastInsertId();
+            Mysql::getmysql()->insertData(self::$csTable, $laData);
+            return Mysql::getmysql()->getLastInsertId();
         } elseif ($poPayement->_isUpdate()) {
-            mysql::getmysql()->updateData(self::$csTable, self::$csPrimaryKey, $laData);
+            Mysql::getmysql()->updateData(self::$csTable, self::$csPrimaryKey, $laData);
         } else {
-            throw new Exception('Objet non Enregistré : Pas un nouveau, pas une MAJ');
+            throw new \Exception('Objet non Enregistré : Pas un nouveau, pas une MAJ');
         }
     }
 

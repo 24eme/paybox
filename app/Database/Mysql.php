@@ -1,31 +1,36 @@
 <?php
-//require_once 'connexion.class.php';
+
+namespace App\Database;
 
 /**
  * @author david.richard
  *
  */
-class mysql /*extends connexion */
+class Mysql
 {
 
     /**
      * @var string
      */
-    const DBINIFILE = 'db.ini';
+    const DBINIFILE = __DIR__ . '/../../db.ini';
+
     /**
      * @var integer
      */
     const MYSQL_GET = 1;
+
     /**
      * @var integer
      */
     const MYSQL_PUT = 0;
+
     /**
      * @var mysql
      */
-    private static $coSingleton;
+    private static $instance;
+
     /**
-     * @var PDO
+     * @var \PDO
      */
     private $coPdo;
 
@@ -38,16 +43,16 @@ class mysql /*extends connexion */
      */
     public static function getmysql()
     {
-        if (!isset(self::$coSingleton)) {
-            $c = __CLASS__;
-            self::$coSingleton = new $c;
-            self::$coSingleton->init();
+        if (!isset(self::$instance)) {
+            $class = __CLASS__;
+            self::$instance = new $class;
+            self::$instance->init();
         }
-        return self::$coSingleton;
+        return self::$instance;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function init()
     {
@@ -55,14 +60,14 @@ class mysql /*extends connexion */
             try {
                 $db_con = parse_ini_file(self::DBINIFILE);
                 $lsConnection = 'mysql:host=' . $db_con['host'] . ';dbname=' . $db_con['basename'];
-                $arrExtraParam = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8");
-                $this->coPdo = new PDO($lsConnection, $db_con['user'], $db_con['password'], $arrExtraParam);
-            } catch (PDOException $e) {
-                $msg = 'ERREUR PDO dans ' . $e->getFile() . ' L.' . $e->getLine() . ' : ' . $e->getMessage();
-                throw new Exception('connexion impossible a la base <br> message : ' . $msg);
+                $arrExtraParam = array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8");
+                $this->coPdo = new \PDO($lsConnection, $db_con['user'], $db_con['password'], $arrExtraParam);
+            } catch (\PDOException $e) {
+                $msg = 'Erreur PDO dans ' . $e->getFile() . ' L.' . $e->getLine() . ' : ' . $e->getMessage();
+                throw new \Exception('Connexion impossible à la base <br> message : ' . $msg);
             }
         } else {
-            throw new Exception('db.ini : File not found ');
+            throw new \Exception('db.ini : File not found');
         }
     }
 
@@ -82,7 +87,7 @@ class mysql /*extends connexion */
         $loStmt->execute();
 
         if ($loStmt) {
-            return $loStmt->fetch(PDO::FETCH_ASSOC);
+            return $loStmt->fetch(\PDO::FETCH_ASSOC);
         } else {
             return array();
         }
@@ -98,33 +103,33 @@ class mysql /*extends connexion */
         $laResultat = array();
         foreach (array_keys($paData) as $lsKey) {
             switch ($paData[$lsKey]['type']) {
-                case 'date':
-                    if ($piMode == self::MYSQL_GET) {
-                        $laResultat[$lsKey] = 'UNIX_TIMESTAMP(' . $lsKey . ') as ' . $lsKey;
-                    } elseif ($piMode == self::MYSQL_PUT) {
-                        $laResultat[$lsKey] = 'FROM_UNIXTIME(' . $paData[$lsKey]['data'] . ')';
-                    } else {
-                        die('ERREUR DE MODE ACCES');
-                    }
-                    break;
-                case 'int':
-                    if ($piMode == self::MYSQL_GET) {
-                        $laResultat[$lsKey] = $lsKey;
-                    } elseif ($piMode == self::MYSQL_PUT) {
-                        $laResultat[$lsKey] = $paData[$lsKey]['data'];
-                    } else {
-                        die('ERREUR DE MODE ACCES');
-                    }
-                    break;
-                case 'string':
-                    if ($piMode == self::MYSQL_GET) {
-                        $laResultat[$lsKey] = $lsKey;
-                    } elseif ($piMode == self::MYSQL_PUT) {
-                        $laResultat[$lsKey] =  $this->coPdo->quote($paData[$lsKey]['data']) ;
-                    } else {
-                        die('ERREUR DE MODE ACCES');
-                    }
-                    break;
+            case 'date':
+                if ($piMode == self::MYSQL_GET) {
+                    $laResultat[$lsKey] = 'UNIX_TIMESTAMP(' . $lsKey . ') as ' . $lsKey;
+                } elseif ($piMode == self::MYSQL_PUT) {
+                    $laResultat[$lsKey] = 'FROM_UNIXTIME(' . $paData[$lsKey]['data'] . ')';
+                } else {
+                    die('Erreur de mode d\'accès');
+                }
+                break;
+            case 'int':
+                if ($piMode == self::MYSQL_GET) {
+                    $laResultat[$lsKey] = $lsKey;
+                } elseif ($piMode == self::MYSQL_PUT) {
+                    $laResultat[$lsKey] = $paData[$lsKey]['data'];
+                } else {
+                    die('Erreur de mode d\'accès');
+                }
+                break;
+            case 'string':
+                if ($piMode == self::MYSQL_GET) {
+                    $laResultat[$lsKey] = $lsKey;
+                } elseif ($piMode == self::MYSQL_PUT) {
+                    $laResultat[$lsKey] =  $this->coPdo->quote($paData[$lsKey]['data']) ;
+                } else {
+                    die('Erreur de mode d\'acces');
+                }
+                break;
             }
         }
         return $laResultat;
@@ -133,7 +138,7 @@ class mysql /*extends connexion */
     /**
      * @param string $pTable
      * @param array  $paData
-     * @throws Exception
+     * @throws \Exception
      */
     public function insertData($pTable, $paData)
     {
@@ -143,9 +148,9 @@ class mysql /*extends connexion */
             $lsQuery = "INSERT INTO " . $pTable . "(" . $lsFields . ") VALUES (" . $lsData . ");";
             $loStatment = $this->coPdo->prepare($lsQuery);
             $loStatment->execute();
-        } catch (PDOException $e) {
-            $msg = 'ERREUR PDO dans ' . $e->getFile() . ' L.' . $e->getLine() . ' : ' . $e->getMessage();
-            throw new Exception('erreur PDO : ' . $msg);
+        } catch (\PDOException $e) {
+            $msg = 'Erreur PDO dans ' . $e->getFile() . ' L.' . $e->getLine() . ' : ' . $e->getMessage();
+            throw new \Exception('Erreur PDO : ' . $msg);
         }
     }
 
@@ -153,7 +158,7 @@ class mysql /*extends connexion */
      * @param string $pTable
      * @param string $psKey
      * @param array  $paData
-     * @throws Exception
+     * @throws \Exception
      */
     public function updateData($pTable, $psKey, $paData)
     {
@@ -171,16 +176,16 @@ class mysql /*extends connexion */
 
             $lsQuery .= " WHERE " . $psKey . " = " . $paData[$psKey]['data'];
             $loStmt = $this->coPdo->exec($lsQuery);
-        } catch (PDOException $e) {
-            $msg = 'ERREUR PDO dans ' . $e->getFile() . ' L.' . $e->getLine() . ' : ' . $e->getMessage();
-            throw new Exception('erreur PDO : ' . $msg);
+        } catch (\PDOException $e) {
+            $msg = 'Erreur PDO dans ' . $e->getFile() . ' L.' . $e->getLine() . ' : ' . $e->getMessage();
+            throw new \Exception('Erreur PDO : ' . $msg);
         }
     }
 
     /**
      * @param string $psId
      * @param string $psTable
-     * @throws Exception
+     * @throws \Exception
      * @return int
      */
     public function getNextId($psId, $psTable)
@@ -189,14 +194,14 @@ class mysql /*extends connexion */
             $lsQuery = "SELECT IFNULL(max(" . $psId . "),0)+1 as id FROM " . $psTable . ";";
             $loStmt = $this->coPdo->query($lsQuery);
             if ($loStmt) {
-                $laData = $loStmt->fetch(PDO::FETCH_ASSOC);
+                $laData = $loStmt->fetch(\PDO::FETCH_ASSOC);
                 return $laData['id'];
             } else {
                 return 0;
             }
-        } catch (PDOException $e) {
-            $msg = 'ERREUR PDO dans ' . $e->getFile() . ' L.' . $e->getLine() . ' : ' . $e->getMessage();
-            throw new Exception('erreur PDO : ' . $msg);
+        } catch (\PDOException $e) {
+            $msg = 'Erreur PDO dans ' . $e->getFile() . ' L.' . $e->getLine() . ' : ' . $e->getMessage();
+            throw new \Exception('Erreur PDO : ' . $msg);
         }
     }
 

@@ -1,13 +1,16 @@
 <?php
 
-require_once('api/persistence/objets/client.class.php');
-require_once('api/persistence/factories/factGeneric.class.php');
+namespace App\Factory;
+
+use App\Database\Mysql;
+use App\Object\Client as OClient;
+use App\Factory\Generic;
 
 /**
  * @author david.richard
  *
  */
-class factClient extends factGeneric
+class Client extends Generic
 {
 
     /**
@@ -19,6 +22,7 @@ class factClient extends factGeneric
             "c_prenom" => "csPrenom",
             "c_email" => "csEmail",
             "c_identifiant" => "csIdentifiant" );
+
     /**
      * @var array
      */
@@ -32,15 +36,18 @@ class factClient extends factGeneric
     /**
      * @var string  Class factory
      */
-    protected static $csClass = 'client';
+    protected static $csClass = OClient::class;
+
     /**
      * @var string table correspondante
      */
     protected static $csTable = 'client';
+
     /**
      * @var string clé primaire de la table
      */
     protected static $csPrimaryKey = 'c_pk';
+
     /**
      * @param int $pPk valeure rechercher
      * @return client objet trouve ou null
@@ -60,20 +67,22 @@ class factClient extends factGeneric
             $laData [$lsKey] = array('type'=> self::$caType[$lsKey],  'data'=> $poClient->__get($lsValue));
         }
         if ($poClient->_isNew()) {
-            mysql::getmysql()->insertData(self::$csTable, $laData);
+            Mysql::getmysql()->insertData(self::$csTable, $laData);
         } elseif ($poClient->_isUpdate()) {
-            mysql::getmysql()->updateData(self::$csTable, self::$csPrimaryKey, $laData);
+            Mysql::getmysql()->updateData(self::$csTable, self::$csPrimaryKey, $laData);
         } else {
-            throw new Exception('Objet non Enregistré : Pas un nouveau, pas une MAJ');
+            throw new \Exception('Objet non Enregistré : Pas un nouveau, pas une MAJ');
         }
     }
+
     /**
      * @return client
      */
     public static function getNewClient()
     {
-        return new self::$csClass(mysql::getmysql()->getNextId(self::$csPrimaryKey, self::$csTable), null);
+        return new self::$csClass(Mysql::getmysql()->getNextId(self::$csPrimaryKey, self::$csTable), null);
     }
+
     /**
      * @param string $psRef
      * @return client

@@ -1,12 +1,15 @@
 <?php
-require_once 'objGeneric.class.php';
+
+namespace App\Object;
+
+use App\Object\Generic;
 
 /**
  *
  * @author david.richard
  *
  */
-class payement extends objGeneric
+class Paiement extends Generic
 {
     public static $STATUS = array(0 => 'A_CONFIRMER', // En attente du paiement PBX
         1 => 'EFFECTUE', // Paiement effectué et confirmé
@@ -62,8 +65,8 @@ class payement extends objGeneric
 
     public function setPStatus($pStat)
     {
-        if (is_numeric($pStat) && array_key_exists($pStat, payement::$STATUS)) {
-            $lsCode = payement::$STATUS[$pStat];
+        if (is_numeric($pStat) && array_key_exists($pStat, Paiement::$STATUS)) {
+            $lsCode = Paiement::$STATUS[$pStat];
         } else {
             $lsCode = $pStat;
         }

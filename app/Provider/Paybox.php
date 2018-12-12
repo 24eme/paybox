@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Provider;
+
 /**
  * Cette classe permet de gérer les actions relatives à Paybox
  * La première étant de générer les élements envoyés au service,
@@ -62,7 +64,7 @@ class Paybox
         $this->url = filter_var($url, FILTER_VALIDATE_URL);
 
         if ($this->url === false) {
-            throw new Exception('BadUrlException: Bad URL. This is not a valid URL');
+            throw new \Exception('BadUrlException: Bad URL. This is not a valid URL');
         }
     }
 
@@ -123,7 +125,7 @@ class Paybox
      */
     public function check()
     {
-        $dom = new DOMDocument();
+        $dom = new \DOMDocument();
         $dom->loadHTMLFile($this->url . self::CHECK_URL);
 
         $status = '';

@@ -1,19 +1,28 @@
 <?php
-require_once 'objGeneric.class.php';
+
+namespace App\Object;
+
+use App\Object\Generic;
 
 /**
  *
  * @author david.richard
  *
  */
-class produits extends objGeneric
+class Produit extends Generic
 {
     protected $ciPk;
+
     protected $csLibelle;
+
     protected $ciMontant;
+
     protected $ciOpen;
+
     protected $csSalt;
+
     protected $ciTypePaiement;
+
     public function __construct()
     {
         $liNbArg = func_num_args();

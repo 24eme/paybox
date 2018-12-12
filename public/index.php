@@ -1,13 +1,15 @@
 <?php
 
-include 'define.php';
-include __DIR__.'/api/persistence/objets/utils.php';
-include __DIR__.'/api/persistence/factories/factProduits.class.php';
+use App\Factory\Produit;
+use App\Utils;
+
+require '../app/autoload.php';
+
+require '../define.php';
 
 if (!session_start()) {
-    utils::display_error_page('La session n\'a pas démarré !');
+    Utils::display_error_page('La session n\'a pas démarré !');
 }
-
 
 $args = array(
     'produit' => FILTER_VALIDATE_INT,
@@ -24,15 +26,15 @@ if ($GET['persId'] === null) {
 }
 
 if (!$GET['produit']) {
-    utils::display_error_page('Paramètre requis manquant.');
+    Utils::display_error_page('Paramètre requis manquant.');
 }
 
-$produit = factProduits::getProduitByPk($GET['produit']);
+$produit = Produit::getProduitByPk($GET['produit']);
 
 if (!is_object($produit) || !$produit->isOpen()) {
-    utils::display_error_page(
+    Utils::display_error_page(
         'Produit indisponible',
-                                'ID produit: '.$GET['produit']
+        'ID produit: ' . $GET['produit']
     );
 }
 
