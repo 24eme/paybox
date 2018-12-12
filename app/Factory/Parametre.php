@@ -1,15 +1,17 @@
 <?php
-require_once('api/bd/mysql.class.php');
-require_once('api/persistence/objets/parametre.class.php');
-require_once('api/persistence/factories/factGeneric.class.php');
+
+namespace App\Factory;
+
+use App\Database\Mysql;
+use App\Factory\Generic;
+use App\Object\Parametre as OParametre;
 
 /**
  * @author david.richard
  *
  */
-class factParametre extends factGeneric
+class Parametre extends Generic
 {
-    
     /**
      * @var array
      */
@@ -17,7 +19,9 @@ class factParametre extends factGeneric
             "pbx_id" => "ciPk",
             "pbx_code" => "csCode",
             "pbx_value" => "csValue",
-            "pbx_desc" => "csDescription");
+            "pbx_desc" => "csDescription"
+    );
+
     /**
      * @var array
      */
@@ -25,20 +29,24 @@ class factParametre extends factGeneric
             "pbx_id" => "int",
             "pbx_code" => "string",
             "pbx_value" => "string",
-            "pbx_desc" => "string");
+            "pbx_desc" => "string"
+    );
+
     /**
      * @var string
      */
-    protected static $csClass = 'parametre';
+    protected static $csClass = OParametre::class;
+
     /**
      * @var string
      */
     protected static $csTable = 'parametre';
+
     /**
      * @var string
      */
     protected static $csPrimaryKey = 'pbx_id';
-    
+
     /**
      * @param int $pPk
      * @return parametre
@@ -65,6 +73,7 @@ class factParametre extends factGeneric
             throw new Exception('Objet non Enregistrer : Pas un nouveau, pas une MAJ');
         }
     }
+
     /**
      * @return Produit
      */
@@ -72,6 +81,7 @@ class factParametre extends factGeneric
     {
         return new self::$csClass(mysql::getmysql()->getNextId(self::$csPrimaryKey, self::$csTable));
     }
+
     /**
      * @param string $pPk
      * @return parametre

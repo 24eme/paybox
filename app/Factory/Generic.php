@@ -1,13 +1,15 @@
 <?php
-require_once('api/bd/mysql.class.php');
+
+namespace App\Factory;
+
+use App\Database\Mysql;
 
 /**
  * @author david.richard
  *
  */
-class factGeneric
+class Generic
 {
-    
     /**
      * @param string $psClass
      * @param array $paMap
@@ -22,7 +24,7 @@ class factGeneric
         foreach ($paMap as $lsKey => $lsValue) {
             $laKey [$lsKey] = array('type'=> $paType[$lsKey]);
         }
-        $laData = mysql::getmysql()->readData($psTable, $laKey, $psKey, $psValue);
+        $laData = Mysql::getmysql()->readData($psTable, $laKey, $psKey, $psValue);
         if (!empty($laData)) {
             $loRetour = new $psClass($psValue);
             foreach ($paMap as $lsKey => $lsValue) {

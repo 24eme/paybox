@@ -1,35 +1,40 @@
 <?php
-require_once 'objGeneric.class.php';
+
+namespace App\Object;
+
+use App\Object\Generic;
 
 /**
  *
  * @author david.richard
  *
  */
-class parametre extends objGeneric
+class Parametre extends Generic
 {
-    
     /**
      *
      * @var int
      */
     protected $ciPk;
+
     /**
      *
      * @var string
      */
     protected $csCode;
+
     /**
      *
      * @var string
      */
     protected $csValue;
+
     /**
      *
      * @var string
      */
     protected $csDescription;
-    
+
     /**
      */
     public function __construct()
@@ -47,7 +52,7 @@ class parametre extends objGeneric
                 die('Utilise la factory !!');
         }
     }
-    
+
     /**
      *
      * @return String
@@ -56,6 +61,7 @@ class parametre extends objGeneric
     {
         return $this->__get("csCode");
     }
+
     /**
      *
      * @return string
@@ -64,6 +70,7 @@ class parametre extends objGeneric
     {
         return $this->__get("csValue");
     }
+
     /**
      *
      * @return string
@@ -72,6 +79,7 @@ class parametre extends objGeneric
     {
         return $this->__get("csDescription");
     }
+
     /**
      *
      * @return int
@@ -80,6 +88,7 @@ class parametre extends objGeneric
     {
         return $this->__get("ciPk");
     }
+
     /**
      *
      * @return string
@@ -102,6 +111,7 @@ class parametre extends objGeneric
             $this->_update();
         }
     }
+
     /**
      * @param string $pDesc
      */
@@ -112,6 +122,7 @@ class parametre extends objGeneric
             $this->_update();
         }
     }
+
     /**
      * @return string
      */
@@ -119,6 +130,7 @@ class parametre extends objGeneric
     {
         return '<input name="' . $this->getCode() . '" value="' . $this->getValue() . '" type="hidden" />';
     }
+
     /**
      * @param string $pcSeparateur
      * @return string
