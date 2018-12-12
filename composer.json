@@ -1,0 +1,10 @@
+{
+    "require": {
+        "robmorgan/phinx": "^0.10.6"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "./vendor/bin/phinx init"
+        ]
+    }
+}
