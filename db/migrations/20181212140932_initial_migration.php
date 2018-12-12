@@ -58,9 +58,9 @@ class InitialMigration extends AbstractMigration
                  ->create();
 
         $achat = $this->table('achat', ['id' => false, 'primary_key' => ['a_c_pk', 'a_y_pk', 'a_p_pk']]);
-        $achat->addColumn('a_c_pk', 'integer')
-              ->addColumn('a_y_pk', 'integer')
-              ->addColumn('a_p_pk', 'integer')
+        $achat->addColumn('a_c_pk', 'integer', ['signed' => false])
+              ->addColumn('a_y_pk', 'integer', ['signed' => false])
+              ->addColumn('a_p_pk', 'integer', ['signed' => false])
               ->addForeignKey('a_c_pk', 'client', 'c_pk')
               ->addForeignKey('a_y_pk', 'payement', 'y_pk')
               ->addForeignKey('a_p_pk', 'produits', 'p_pk')
