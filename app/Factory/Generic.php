@@ -4,8 +4,6 @@ namespace App\Factory;
 
 use App\Database\Mysql;
 
-//require_once('api/bd/mysql.class.php');
-
 /**
  * @author david.richard
  *

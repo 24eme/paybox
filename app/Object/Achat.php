@@ -7,11 +7,6 @@ use App\Factory\Produit;
 use App\Factory\Paiement;
 use App\Factory\Client;
 
-//require_once 'objGeneric.class.php';
-//require_once 'api/persistence/factories/factProduits.class.php';
-//require_once 'api/persistence/factories/factAchat.class.php';
-//require_once 'api/persistence/factories/factPayement.class.php';
-
 /**
  *
  * @author david.richard

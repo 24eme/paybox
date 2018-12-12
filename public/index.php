@@ -6,8 +6,6 @@ use App\Utils;
 require '../app/autoload.php';
 
 require '../define.php';
-//require BASE . '/api/persistence/objets/utils.php';
-//require BASE . '/api/persistence/factories/factProduits.class.php';
 
 if (!session_start()) {
     Utils::display_error_page('La session n\'a pas démarré !');

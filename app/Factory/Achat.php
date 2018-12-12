@@ -6,10 +6,6 @@ use App\Factory\Generic;
 use App\Database\Mysql;
 use App\Object\Achat as OAchat;
 
-//require_once('api/bd/mysql.class.php');
-//require_once('api/persistence/objets/achat.class.php');
-//require_once('api/persistence/factories/factGeneric.class.php');
-
 class Achat extends Generic
 {
     protected static $caMap = array(

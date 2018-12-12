@@ -6,9 +6,6 @@ use App\Factory\Generic;
 use App\Object\Paiement as OPaiement;
 use App\Database\Mysql;
 
-//require_once('api/persistence/objets/payement.class.php');
-//require_once('api/persistence/factories/factGeneric.class.php');
-
 /**
  *
  * @author david.richard

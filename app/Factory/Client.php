@@ -6,9 +6,6 @@ use App\Database\Mysql;
 use App\Object\Client as OClient;
 use App\Factory\Generic;
 
-//require_once('api/persistence/objets/client.class.php');
-//require_once('api/persistence/factories/factGeneric.class.php');
-
 /**
  * @author david.richard
  *

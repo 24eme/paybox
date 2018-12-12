@@ -4,8 +4,6 @@ namespace App\Object;
 
 use App\Object\Generic;
 
-//require_once 'objGeneric.class.php';
-
 /**
  *
  * @author david.richard

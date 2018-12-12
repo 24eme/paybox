@@ -6,8 +6,6 @@ require '../app/autoload.php';
 
 require '../define.php';
 
-//require BASE . '/api/persistence/objets/utils.php';
-
 $args = array(
     'action' => FILTER_DEFAULT,
     'Mt' => FILTER_DEFAULT,

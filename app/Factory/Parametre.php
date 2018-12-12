@@ -6,10 +6,6 @@ use App\Database\Mysql;
 use App\Factory\Generic;
 use App\Object\Parametre as OParametre;
 
-//require_once('api/bd/mysql.class.php');
-//require_once('api/persistence/objets/parametre.class.php');
-//require_once('api/persistence/factories/factGeneric.class.php');
-
 /**
  * @author david.richard
  *
