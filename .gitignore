@@ -2,3 +2,4 @@ db.ini
 log/
 \.idea/
 vendor/
+phinx.yml
