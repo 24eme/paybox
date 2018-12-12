@@ -69,7 +69,7 @@ class InitialMigration extends AbstractMigration
         $parametre = $this->table('parametre', ['id' => 'pbx_id', 'signed' => false]);
         $parametre->addColumn('pbx_code', 'string', ['limit' => 15])
                   ->addColumn('pbx_value', 'string', ['limit' => 250])
-                  ->addColumn('pbx_desc', 'string', ['limit' => 250])
+                  ->addColumn('pbx_desc', 'string', ['limit' => 50])
                   ->create();
     }
 }
