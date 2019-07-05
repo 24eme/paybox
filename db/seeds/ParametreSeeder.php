@@ -27,7 +27,7 @@ class ParametreSeeder extends AbstractSeed
                 'pbx_desc'  => 'Rang'
             ],
             [
-                'pbx_code'  => 'PBX_DEVIS',
+                'pbx_code'  => 'PBX_DEVISE',
                 'pbx_value' => '978',
                 'pbx_desc'  => 'Identifiant de la devise'
             ],
