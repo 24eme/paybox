@@ -88,6 +88,11 @@ if (is_null($c)) {
     $c->setEmail($POST['email']);
     Client::writeClient($c);
     $c = Client::getClientByReference($refClient);
+} else {
+    if ($c->getEmail() !== $POST['email']) {
+        Utils::display_error_page("Anomalie détectée sur l'email.\n
+            Merci de contacter la DEVE et / ou la DSI");
+    }
 }
 
 // On instancie la référence du paiement
