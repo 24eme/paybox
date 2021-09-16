@@ -36,7 +36,7 @@ class Client extends Generic
     /**
      * @var string  Class factory
      */
-    protected static $csClass = OClient::class;
+    protected static $csClass = 'App\Object\Client';
 
     /**
      * @var string table correspondante

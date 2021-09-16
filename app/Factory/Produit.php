@@ -39,7 +39,7 @@ class Produit extends Generic
     /**
      * @var string
      */
-    protected static $csClass = OProduit::class;
+    protected static $csClass = 'App\Object\Produit';
 
     /**
      * @var string

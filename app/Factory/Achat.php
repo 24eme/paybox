@@ -21,7 +21,7 @@ class Achat extends Generic
         "a_y_pk" => "int",
         "a_p_pk" => "int");
 
-    protected static $csClass = OAchat::class;
+    protected static $csClass = 'App\Object\Achat';
 
     protected static $csTable = 'achat';
 

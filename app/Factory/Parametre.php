@@ -35,7 +35,7 @@ class Parametre extends Generic
     /**
      * @var string
      */
-    protected static $csClass = OParametre::class;
+    protected static $csClass = 'App\Object\Parametre';
 
     /**
      * @var string

@@ -40,7 +40,7 @@ class Paiement extends Generic
      *
      * @var string
      */
-    protected static $csClass = OPaiement::class;
+    protected static $csClass = 'App\Object\Paiement';
     /**
      *
      * @var string
