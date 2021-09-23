@@ -4,7 +4,7 @@ namespace App\Object;
 
 use App\Object\Generic;
 use App\Factory\Produit;
-use App\Factory\Paiement;
+use App\Factory\Paiement as FPaiement;
 use App\Factory\Client;
 
 /**
@@ -82,6 +82,6 @@ class Achat extends Generic
 
     public function getPayement()
     {
-        return Paiement::getPayementByPk($this->ciYPk);
+        return FPaiement::getPayementByPk($this->ciYPk);
     }
 }
