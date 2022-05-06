@@ -6,5 +6,8 @@
         "post-install-cmd": [
             "./vendor/bin/phinx init"
         ]
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.19"
     }
 }
