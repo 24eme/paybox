@@ -17,6 +17,7 @@ class ProduitSeeder extends AbstractSeed
     public function run()
     {
         $faker = Factory::create('fr_FR');
+        $salt = strtoupper($faker->word());
         $data = [];
 
         for ($i = 0; $i < 5; $i++) {
@@ -24,7 +25,7 @@ class ProduitSeeder extends AbstractSeed
                 'p_libelle' => $faker->sentence(3),
                 'p_montant' => $faker->randomFloat(2, 10, 5000),
                 'p_open' => $faker->boolean(),
-                'p_salt' => 'ENVA',
+                'p_salt' => $salt,
                 'p_type_paiement' => $faker->numberBetween(1, 2)
             ];
         }
