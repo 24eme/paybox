@@ -147,10 +147,14 @@ class Mysql
             $lsData = join(', ', $this->converteType($paData, self::MYSQL_PUT));
             $lsQuery = "INSERT INTO " . $pTable . "(" . $lsFields . ") VALUES (" . $lsData . ");";
             $loStatment = $this->coPdo->prepare($lsQuery);
-            $loStatment->execute();
+            $res = $loStatment->execute();
         } catch (\PDOException $e) {
             $msg = 'Erreur PDO dans ' . $e->getFile() . ' L.' . $e->getLine() . ' : ' . $e->getMessage();
             throw new \Exception('Erreur PDO : ' . $msg);
+        }
+
+        if (! $res) {
+            throw new \Exception("[PDO] Erreur d'ecriture : ".implode(', ', $loStatment->errorInfo()));
         }
     }
 
