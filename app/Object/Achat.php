@@ -3,9 +3,9 @@
 namespace App\Object;
 
 use App\Object\Generic;
-use App\Factory\Produit;
+use App\Factory\Produit as FProduit;
 use App\Factory\Paiement as FPaiement;
-use App\Factory\Client;
+use App\Factory\Client as FClient;
 
 /**
  *
