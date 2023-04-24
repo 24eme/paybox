@@ -117,7 +117,7 @@ class Utils
         $headers = array();
         $headers[] = "MIME-Version: 1.0";
         $headers[] = "Content-type: text/html; charset=utf-8";
-        $headers[] = "From: ***REMOVED***";
+        $headers[] = "From: ".FROM_EMAIL;
         $headers[] = "Subject: {$subject}";
         $headers[] = "X-Mailer: PHP/".phpversion();
 
