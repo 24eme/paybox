@@ -1,6 +1,6 @@
 {
     "require": {
-        "robmorgan/phinx": "^0.10.6"
+        "robmorgan/phinx": "^0.13.4"
     },
     "scripts": {
         "post-install-cmd": [
