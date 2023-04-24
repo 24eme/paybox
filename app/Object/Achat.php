@@ -3,9 +3,9 @@
 namespace App\Object;
 
 use App\Object\Generic;
-use App\Factory\Produit as FProduit;
-use App\Factory\Paiement as FPaiement;
-use App\Factory\Client as FClient;
+use App\Factory\Produit;
+use App\Factory\Paiement;
+use App\Factory\Client;
 
 /**
  *
@@ -72,16 +72,16 @@ class Achat extends Generic
 
     public function getClient()
     {
-        return FClient::getClientByPk($this->ciCPk);
+        return Client::getClientByPk($this->ciCPk);
     }
 
     public function getProduit()
     {
-        return FProduit::getProduitByPk($this->ciPPk);
+        return Produit::getProduitByPk($this->ciPPk);
     }
 
     public function getPayement()
     {
-        return FPaiement::getPayementByPk($this->ciYPk);
+        return Paiement::getPayementByPk($this->ciYPk);
     }
 }

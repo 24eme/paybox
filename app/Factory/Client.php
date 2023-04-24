@@ -3,7 +3,7 @@
 namespace App\Factory;
 
 use App\Database\Mysql;
-use App\Object\Client as OClient;
+use App\Object\Client as ObjectClient;
 use App\Factory\Generic;
 
 /**
@@ -36,7 +36,7 @@ class Client extends Generic
     /**
      * @var string  Class factory
      */
-    protected static $csClass = 'App\Object\Client';
+    protected static $csClass = ObjectClient::class;
 
     /**
      * @var string table correspondante

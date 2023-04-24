@@ -12,7 +12,7 @@ class Mysql
     /**
      * @var string
      */
-    const DBINIFILE = __DIR__ . '/../../db.ini';
+    const DBINIFILE = __DIR__.'/../../db.ini';
 
     /**
      * @var integer

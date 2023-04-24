@@ -4,7 +4,7 @@ namespace App\Factory;
 
 use App\Factory\Generic;
 use App\Database\Mysql;
-use App\Object\Achat as OAchat;
+use App\Object\Achat as ObjectAchat;
 
 class Achat extends Generic
 {
@@ -21,7 +21,7 @@ class Achat extends Generic
         "a_y_pk" => "int",
         "a_p_pk" => "int");
 
-    protected static $csClass = 'App\Object\Achat';
+    protected static $csClass = ObjectAchat::class;
 
     protected static $csTable = 'achat';
 

@@ -3,7 +3,7 @@
 namespace App\Factory;
 
 use App\Factory\Generic;
-use App\Object\Produit as OProduit;
+use App\Object\Produit as ObjectProduit;
 use App\Database\Mysql;
 
 /**
@@ -39,7 +39,7 @@ class Produit extends Generic
     /**
      * @var string
      */
-    protected static $csClass = 'App\Object\Produit';
+    protected static $csClass = ObjectProduit::class;
 
     /**
      * @var string

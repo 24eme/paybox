@@ -4,7 +4,7 @@ namespace App\Factory;
 
 use App\Database\Mysql;
 use App\Factory\Generic;
-use App\Object\Parametre as OParametre;
+use App\Object\Parametre as ObjectParametre;
 
 /**
  * @author david.richard
@@ -35,7 +35,7 @@ class Parametre extends Generic
     /**
      * @var string
      */
-    protected static $csClass = 'App\Object\Parametre';
+    protected static $csClass = ObjectParametre::class;
 
     /**
      * @var string

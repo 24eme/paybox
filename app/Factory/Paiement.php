@@ -3,7 +3,7 @@
 namespace App\Factory;
 
 use App\Factory\Generic;
-use App\Object\Paiement as OPaiement;
+use App\Object\Paiement as ObjectPaiement;
 use App\Database\Mysql;
 
 /**
@@ -40,7 +40,7 @@ class Paiement extends Generic
      *
      * @var string
      */
-    protected static $csClass = 'App\Object\Paiement';
+    protected static $csClass = ObjectPaiement::class;
     /**
      *
      * @var string
