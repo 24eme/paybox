@@ -59,7 +59,7 @@ class Mysql
         if (is_file(self::DBINIFILE)) {
             try {
                 $db_con = parse_ini_file(self::DBINIFILE);
-                $lsConnection = 'mysql:host=' . $db_con['host'] . ';dbname=' . $db_con['basename'];
+                $lsConnection = $db_con['driver'].':host=' . $db_con['host'] . ';dbname=' . $db_con['basename'];
                 $arrExtraParam = array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8");
                 $this->coPdo = new \PDO($lsConnection, $db_con['user'], $db_con['password'], $arrExtraParam);
             } catch (\PDOException $e) {
