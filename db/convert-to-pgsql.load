@@ -1,0 +1,5 @@
+load database
+        from mysql://root@localhost/paybox
+        into pgsql://root@localhost/paybox
+
+MATERIALIZE VIEWS v_paiement_effectue
