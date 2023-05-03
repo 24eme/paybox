@@ -22,6 +22,22 @@ composer install
 vendor/bin/phinx migrate
 ```
 
+## Migration vers PostgreSQL
+
+#### Prérequis
+
+[pgloader](https://pgloader.readthedocs.io/en/latest/index.html)
+
+#### Migration
+
+`pgloader ./db/convert-to-pgsql.load`
+
+Si pgloader n'est pas packagé, l'alternative podman / docker fonctionne comme ceci :
+
+`podman run --rm --network=host -it -v $PWD:$HOME dimitri/pgloader:latest pgloader $HOME/db/convert-to-pgsql.load`
+
+Vérifier les infos de connexion des bases dans le script [convert-to-pgsql.load](./db/convert-to-pgsql.load)
+
 ## Pour lancer php en 5.4
 ```
 podman build -t php-fpm-5.4 .
