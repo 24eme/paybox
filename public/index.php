@@ -21,11 +21,11 @@ $args = array(
 
 $GET = filter_input_array(INPUT_GET, $args, true);
 
-if ($GET['persId'] === null) {
+if ($GET === null || $GET['persId'] === null) {
     $GET['persId'] = uniqid();
 }
 
-if (!$GET['produit']) {
+if ($GET === null || isset($GET['produit']) === false || !$GET['produit']) {
     Utils::display_error_page('Paramètre requis manquant.');
 }
 
